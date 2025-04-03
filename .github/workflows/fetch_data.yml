@@ -12,6 +12,7 @@ jobs:
     timeout-minutes: 30
 
     strategy:
+      max-parallel: 1
       matrix:
         station: [LENDAVA, PTUJ, CELJE, CRNOMELJ, BOVEC] # list of weather stations
 
