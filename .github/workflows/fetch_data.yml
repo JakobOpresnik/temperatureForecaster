@@ -9,7 +9,7 @@ jobs:
   fetch_temp:
     name: Fetch and preprocess temperature data
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
 
     strategy:
       matrix:
@@ -55,21 +55,26 @@ jobs:
         run: |
           poetry run python src/data/preprocess_temp_data.py ${{ matrix.station }}
 
-      - name: Commit data changes
+      - name: Configure Git
         run: |
-          dvc add data
-          dvc push
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add data.dvc
-          git commit -m "Updated raw temperature data for ${{ matrix.station }} on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
 
       - name: Pull latest changes
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git config pull.rebase false
           git pull origin main || echo "No changes to pull"
+
+      - name: Commit data changes
+        run: |
+          dvc add data
+          dvc status
+          git status
+          git add data.dvc
+          git commit -m "Updated raw temperature data for ${{ matrix.station }} on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
+
+      - name: Push changes to DVC
+        run: |
+          dvc push
 
       - name: Push changes
         uses: ad-m/github-push-action@master
