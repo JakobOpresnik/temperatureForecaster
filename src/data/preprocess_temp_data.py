@@ -105,6 +105,12 @@ def preprocess_temp_data(station_id):
     df = df.drop_duplicates(subset=["Date"])
 
     station_name = records[0].find("domain_title").text
+
+    # filter out data which comes in more often than 30 minutes
+    if station_name == "PTUJ":
+        df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
+        df = df[df['Date'].dt.minute.isin([0, 30])]
+    
     # start_date = records[0].find("tsValid_issued").text.split(" ")[0].replace(".", "-")
     # end_date = records[len(records)-1].find("tsValid_issued").text.split(" ")[0].replace(".", "-")
 
