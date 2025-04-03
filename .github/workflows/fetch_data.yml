@@ -10,6 +10,10 @@ jobs:
     name: Fetch and preprocess temperature data
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        station: [LENDAVA, PTUJ, CELJE, CRNOMELJ, BOVEC] # list of weather stations
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,18 +37,18 @@ jobs:
 
       - name: Run fetch script
         run: |
-          poetry run python src/data/fetch_temp_data.py
+          poetry run python src/data/fetch_temp_data.py ${{ matrix.station }}
 
       - name: Run pre-process script
         run: |
-          poetry run python src/data/preprocess_temp_data.py
+          poetry run python src/data/preprocess_temp_data.py ${{ matrix.station }}
 
       - name: Commit data changes
         run: |
           git add data
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git commit -m "Updated raw temperature data on $(date --iso-8601=seconds) with GitHub Actions" || echo "No change to commit"
+          git commit -m "Updated raw temperature data for ${{ matrix.station }} on $(date --iso-8601=seconds) with GitHub Actions" || echo "No change to commit"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
