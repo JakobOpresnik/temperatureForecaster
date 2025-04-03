@@ -62,7 +62,9 @@ jobs:
 
       - name: Pull latest changes
         run: |
-          git pull origin main || echo "No changes to pull"
+          git fetch origin main
+          git reset --soft origin/main  # keep local changes but align with remote
+          git pull --rebase origin main || echo "No changes to pull"
 
       - name: Commit data changes
         run: |
