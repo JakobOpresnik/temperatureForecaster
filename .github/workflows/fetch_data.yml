@@ -42,10 +42,13 @@ jobs:
         run: |
           poetry install --no-interaction --no-root
 
-      - name: DVC pull data
+      - name: Configure DVC Remote for Pull
         run: |
           dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
           dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
+
+      - name: Pull latest data from DVC
+        run: |
           dvc pull
 
       - name: Run fetch script
@@ -64,7 +67,7 @@ jobs:
       - name: Pull latest changes
         run: |
           git fetch origin main
-          git reset --soft origin/main  # keep local changes but align with remote
+          git reset --soft origin/main
           git pull --rebase origin main || echo "No changes to pull"
 
       - name: Commit data changes
@@ -75,9 +78,16 @@ jobs:
           git add data.dvc
           git commit -m "Updated raw temperature data for ${{ matrix.station }} on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
 
+      - name: Configure DVC Remote for Push
+        run: |
+          dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
+          dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
+          dvc remote list
+          dvc status -c
+
       - name: Push changes to DVC
         run: |
-          dvc push
+          dvc push -v
 
       - name: Push changes
         uses: ad-m/github-push-action@master
