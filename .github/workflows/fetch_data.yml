@@ -3,18 +3,13 @@ name: Fetch data on schedule
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # every day at midnight UTC
 
 jobs:
   fetch_temp:
     name: Fetch and preprocess temperature data
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    strategy:
-      max-parallel: 1
-      matrix:
-        station: [LENDAVA, PTUJ, CELJE, CRNOMELJ, BOVEC] # list of weather stations
 
     steps:
       - name: Checkout repository
@@ -42,7 +37,7 @@ jobs:
         run: |
           poetry install --no-interaction --no-root
 
-      - name: Configure DVC Remote for Pull
+      - name: Configure DVC Remote
         run: |
           dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
           dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
@@ -51,20 +46,21 @@ jobs:
         run: |
           dvc pull
 
-      - name: Run fetch script
+      - name: Run fetch & preprocess scripts for all stations
         run: |
-          poetry run python src/data/fetch_temp_data.py ${{ matrix.station }}
-
-      - name: Run pre-process script
-        run: |
-          poetry run python src/data/preprocess_temp_data.py ${{ matrix.station }}
+          for station in LENDAVA PTUJ CELJE CRNOMELJ BOVEC
+          do
+            echo "Fetching and preprocessing $station..."
+            poetry run python src/data/fetch_temp_data.py $station
+            poetry run python src/data/preprocess_temp_data.py $station
+          done
 
       - name: Configure Git
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-      - name: Pull latest changes
+      - name: Pull latest code changes
         run: |
           git fetch origin main
           git reset --soft origin/main
@@ -73,23 +69,14 @@ jobs:
       - name: Commit data changes
         run: |
           dvc add data
-          dvc status
-          git status
           git add data.dvc
-          git commit -m "Updated raw temperature data for ${{ matrix.station }} on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
+          git commit -m "Updated raw temperature data for all stations on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
 
-      - name: Configure DVC Remote for Push
-        run: |
-          dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
-          dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
-          dvc remote list
-          dvc status -c
-
-      - name: Push changes to DVC
+      - name: Push data to DVC
         run: |
           dvc push -v
 
-      - name: Push changes
+      - name: Push code changes to GitHub
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
