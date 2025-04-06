@@ -98,37 +98,25 @@ def preprocess_temp_data(station_id):
             solar_radiation_avg
         ]], columns=columns)], ignore_index=True)
 
-    # sort the DataFrame by the "date_to" column
-    # df = df.sort_values(by="Date")
-
     # filter unique "Date" values
     df = df.drop_duplicates(subset=["Date"])
+    df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
 
     station_name = records[0].find("domain_title").text.strip().upper()
 
     # filter out data which is more frequent than 30 minutes
     if station_name == "PTUJ":
         print("Filtering PTUJ data for 30 minutes intervals...")
-
-        # convert 'Date' to datetime object for filtering
-        df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
-
         # filter the data to only keep records that are at the 30-minute mark or the hour mark
         df = df[df['Date'].dt.minute.isin([0, 30])]
 
-        # convert 'Date' back to the format 'YYYY-MM-DD HH:MM:SS'
-        df['Date'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M:%S')
-    
-    # start_date = records[0].find("tsValid_issued").text.split(" ")[0].replace(".", "-")
-    # end_date = records[len(records)-1].find("tsValid_issued").text.split(" ")[0].replace(".", "-")
+    df['Date'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M:%S')
 
     print(df)
-    # print(f"Fetching successful. Fetched data from {start_date} to {end_date}")
     print("Fetching successful.")
     print(f"Saving pre-processed data to: data/preprocessed/temp/{station_id}.csv")
 
     # save the DataFrame to a CSV file
-    # df.to_csv(f"data/preprocessed/temp/{station_name}_{start_date}_to_{end_date}.csv", index=False)
     df.to_csv(f"data/preprocessed/temp/{station_id}.csv", index=False)
 
 if __name__ == "__main__":
