@@ -49,7 +49,7 @@ def preprocess_temp_data(station_id):
 
     # check if csv file already exists
     if os.path.exists(f"data/preprocessed/temp/{station_id}.csv"):
-        df = pd.read_csv(f"data/preprocessed/temp/{station_id}.csv")
+        df = pd.read_csv(f"data/preprocessed/temp/{station_id}.csv", parse_dates=["Date"])
 
     # convert the XML data to a DataFrame
     for record in records:
@@ -100,7 +100,9 @@ def preprocess_temp_data(station_id):
 
     # filter unique "Date" values
     df = df.drop_duplicates(subset=["Date"])
-    df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
+
+    if df['Date'].dtype == object:
+        df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
 
     station_name = records[0].find("domain_title").text.strip().upper()
 
