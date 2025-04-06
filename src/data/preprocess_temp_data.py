@@ -98,9 +98,6 @@ def preprocess_temp_data(station_id):
             solar_radiation_avg
         ]], columns=columns)], ignore_index=True)
 
-    # filter unique "Date" values
-    df = df.drop_duplicates(subset=["Date"])
-
     if df['Date'].dtype == object:
         df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
 
@@ -113,6 +110,9 @@ def preprocess_temp_data(station_id):
         df = df[df['Date'].dt.minute.isin([0, 30])]
 
     df['Date'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+    # filter unique "Date" values
+    df = df.drop_duplicates(subset=["Date"])
 
     print(df)
     print("Fetching successful.")
