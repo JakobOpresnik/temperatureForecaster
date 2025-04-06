@@ -109,7 +109,7 @@ def preprocess_temp_data(station_id):
     # filter out data which is more frequent than 30 minutes
     if station_name == "PTUJ":
         print("Filtering PTUJ data for 30 minutes intervals...")
-        df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
+        # df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y %H:%M', errors='coerce')
         df = df[df['Date'].dt.minute.isin([0, 30])]
     
     # start_date = records[0].find("tsValid_issued").text.split(" ")[0].replace(".", "-")
