@@ -1,7 +1,6 @@
 import sys
 import requests
 from datetime import datetime
-import xml.etree.ElementTree as ET
 
 def fetch_air_data(station_id):
     try:
