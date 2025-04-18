@@ -1,2 +1,17 @@
+# Ignore everything inside /data
+/data/*
+
+# But do NOT ignore DVC metadata files
+!/.dvc/
+!dvc.yaml
+!dvc.lock
+
+# Ignore other common files and directories
+*.log
+*.tmp
+*.bak
+*.swp
+*.pyc
+__pycache__
+
 pat_token.txt
-/data
