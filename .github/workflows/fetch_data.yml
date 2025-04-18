@@ -46,14 +46,15 @@ jobs:
         run: |
           dvc pull
 
-      - name: Run fetch & preprocess scripts for all stations
+      - name: Run DVC pipeline
         run: |
-          for station in LENDAVA PTUJ CELJE CRNOMELJ BOVEC MEZICA ROGLA
-          do
-            echo "Fetching and preprocessing $station..."
-            poetry run python src/data/fetch_temp_data.py $station
-            poetry run python src/data/preprocess_temp_data.py $station
-          done
+          dvc pull
+          dvc status
+          dvc repro
+          dvc push
+          git add dvc.lock
+          git commit -m "Update dvc.lock on $(data --iso-8601=seconds) with GitHub Actions" || true
+          git push || true
 
       - name: Configure Git
         run: |

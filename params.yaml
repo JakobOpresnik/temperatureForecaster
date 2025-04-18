@@ -1,0 +1,20 @@
+fetch:
+  base_url: 'https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/'
+  station_url_suffix: 'observationAms_{station}_history.xml'
+  output_file_path_template: 'data/raw/temp/temp_data_{station}.xml'
+
+preprocess:
+  xml_data_tag: 'metData'
+  input_file_path_template: 'data/raw/temp/temp_data_{station}.xml'
+  output_file_path_template: 'data/preprocessed/temp/{station}.csv'
+  filter_half_hour_stations:
+    - PTUJ
+
+stations:
+  - LENDAVA
+  - PTUJ
+  - CELJE
+  - CRNOMELJ
+  - BOVEC
+  - MEZICA
+  - ROGLA

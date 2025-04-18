@@ -1,0 +1,36 @@
+stages:
+  fetch:
+    cmd: |
+      poetry run python src/data/fetch_temp_data.py
+      git commit -am "Updated raw temperature data on $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows" || true
+      git push || true
+      dvc push || true
+    deps:
+      - src/data/fetch_temp_data.py
+    params:
+      - fetch.base_url
+      - fetch.station_url_suffix
+      - fetch.output_file_path_template
+      - stations
+    outs:
+      - data/raw/temp/
+    always_changed: true
+
+  preprocess:
+    cmd: |
+      poetry run python src/data/preprocess_temp_data.py
+      git commit -am "Updated preprocessed temperature data on $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows" || true
+      git push || true
+      dvc push || true
+    deps:
+      - src/data/preprocess_temp_data.py
+      - data/raw/temp/
+    params:
+      - preprocess.xml_data_tag
+      - preprocess.input_file_path_template
+      - preprocess.output_file_path_template
+      - preprocess.filter_half_hour_stations
+      - stations
+    outs:
+      - data/preprocessed/temp/:
+          persist: true
