@@ -17,7 +17,7 @@ def fetch_air_data():
         url = base_url + filename
         output_file_path = output_file_path_template.format(station=station)
 
-         # ensure the directory exists before saving the file
+        # ensure the directory exists before saving the file
         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
 
         try:
