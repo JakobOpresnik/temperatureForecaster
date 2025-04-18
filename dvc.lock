@@ -1,0 +1,61 @@
+schema: '2.0'
+stages:
+  fetch:
+    cmd: poetry run python src/data/fetch_temp_data.py
+    deps:
+    - path: src/data/fetch_temp_data.py
+      hash: md5
+      md5: 700a1173d31004c7cd40ee1f559d0a04
+      size: 1564
+    params:
+      params.yaml:
+        fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
+        fetch.output_file_path_template: data/raw/temp/temp_data_{station}.xml
+        fetch.station_url_suffix: observationAms_{station}_history.xml
+        stations:
+        - LENDAVA
+        - PTUJ
+        - CELJE
+        - CRNOMELJ
+        - BOVEC
+        - MEZICA
+        - ROGLA
+    outs:
+    - path: data/raw/temp/
+      hash: md5
+      md5: 84476afbe5a3361442127519be4a7d99.dir
+      size: 10035560
+      nfiles: 7
+  preprocess:
+    cmd: poetry run python src/data/preprocess_temp_data.py
+    deps:
+    - path: data/raw/temp/
+      hash: md5
+      md5: 84476afbe5a3361442127519be4a7d99.dir
+      size: 10035560
+      nfiles: 7
+    - path: src/data/preprocess_temp_data.py
+      hash: md5
+      md5: f5b13a48680b9eff3c65ab1bb2625b41
+      size: 7195
+    params:
+      params.yaml:
+        preprocess.filter_half_hour_stations:
+        - PTUJ
+        preprocess.input_file_path_template: data/raw/temp/temp_data_{station}.xml
+        preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
+        preprocess.xml_data_tag: metData
+        stations:
+        - LENDAVA
+        - PTUJ
+        - CELJE
+        - CRNOMELJ
+        - BOVEC
+        - MEZICA
+        - ROGLA
+    outs:
+    - path: data/preprocessed/temp/
+      hash: md5
+      md5: b451e264e0e7cded78a586057a0d3c58.dir
+      size: 664213
+      nfiles: 7
