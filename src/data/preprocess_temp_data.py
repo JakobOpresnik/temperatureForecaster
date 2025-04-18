@@ -1,5 +1,4 @@
 import os
-import sys
 import requests
 import numpy as np
 import pandas as pd
@@ -141,5 +140,4 @@ def preprocess_temp_data():
             print(f"Error preprocessing data: {e}")
 
 if __name__ == "__main__":
-    # station_id = sys.argv[1]
     preprocess_temp_data()
