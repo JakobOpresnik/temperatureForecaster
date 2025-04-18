@@ -18,14 +18,14 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
 
+      - name: Setup Git
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+
       - name: Install Poetry
         run: |
           pipx install poetry
-
-      - name: Setup DVC
-        uses: iterative/setup-dvc@v1
-        with:
-          version: '3.59.1'
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -37,14 +37,20 @@ jobs:
         run: |
           poetry install --no-interaction --no-root
 
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '3.59.1'
+
       - name: Configure DVC Remote
         run: |
           dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
           dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
 
-      - name: Pull latest data from DVC
+      - name: Pull latest code and data
         run: |
-          dvc pull
+          git pull origin main || echo "Nothing to pull"
+          dvc pull || echo "No remote data to pull"
 
       - name: Run DVC pipeline
         run: |
@@ -56,28 +62,8 @@ jobs:
           git commit -m "Update dvc.lock on $(data --iso-8601=seconds) with GitHub Actions" || true
           git push || true
 
-      - name: Configure Git
+      - name: Commit updated dvc.lock (if changed)
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-
-      - name: Pull latest code changes
-        run: |
-          git fetch origin main
-          git reset --soft origin/main
-          git pull --rebase origin main || echo "No changes to pull"
-
-      - name: Commit data changes
-        run: |
-          dvc add data
-          git add data.dvc
-          git commit -m "Updated raw temperature data for all stations on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
-
-      - name: Push data to DVC
-        run: |
-          dvc push -v
-
-      - name: Push code changes to GitHub
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT_TOKEN }}
+          git add dvc.lock
+          git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
+          git push || echo "Nothing to push"
