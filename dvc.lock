@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: ff64f999a8d91f43159ab51d9e241e35
-      size: 1428
+      md5: 2e00139bf4e68f43bc27b64545106ca9
+      size: 1427
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: ca0014b2588f961991c1e2729f7eac95.dir
-      size: 10035471
+      md5: ca640e3340f4b7d57da259d429de09e6.dir
+      size: 10035547
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: ca0014b2588f961991c1e2729f7eac95.dir
-      size: 10035471
+      md5: ca640e3340f4b7d57da259d429de09e6.dir
+      size: 10035547
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -56,6 +56,6 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: c45d1e25bf4bc94ba56be2e07af71fee.dir
-      size: 658263
+      md5: db7873b934d53b415129102615982206.dir
+      size: 658492
       nfiles: 7
