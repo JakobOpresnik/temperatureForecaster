@@ -33,9 +33,6 @@ stages:
     deps:
       - data/preprocessed/temp/
     outs:
-      - gx/great_expectations.yml
       - gx/checkpoints
       - gx/expectations
       - gx/plugins
-      - gx/run_validation.py
-      - gx/data_source_config.ipynb
