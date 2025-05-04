@@ -33,5 +33,5 @@ stages:
     deps:
       - data/preprocessed/temp/
     outs:
-      - gx:
+      - gx/uncommitted:
           persist: true
