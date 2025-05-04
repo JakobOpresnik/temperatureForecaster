@@ -33,7 +33,6 @@ stages:
     deps:
       - data/preprocessed/temp/
     outs:
-    outs:
       - gx/great_expectations.yml
       - gx/checkpoints
       - gx/expectations
