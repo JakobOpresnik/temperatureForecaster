@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 432aae4f421204d6e241d3f248482e96.dir
-      size: 10020411
+      md5: 6726b9dcc0ddf039a5d70708ada292f5.dir
+      size: 9917829
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 432aae4f421204d6e241d3f248482e96.dir
-      size: 10020411
+      md5: 6726b9dcc0ddf039a5d70708ada292f5.dir
+      size: 9917829
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -56,6 +56,6 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 24a51aca108bd18007ea9a60f985504f.dir
-      size: 1308334
+      md5: f66f29365854050582a8bfdcd4634d22.dir
+      size: 1384603
       nfiles: 7
