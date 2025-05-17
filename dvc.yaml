@@ -26,3 +26,13 @@ stages:
     outs:
       - data/preprocessed/temp/:
           persist: true
+
+  validation:
+    cmd: |
+      cd gx && poetry run python run_validation.py
+    deps:
+      - data/preprocessed/temp/
+    outs:
+      - gx/checkpoints
+      - gx/expectations
+      - gx/plugins
