@@ -36,6 +36,13 @@ for filename in os.listdir(base_dir):
     print(filename)
 
 
+print("🧪 Verifying resolved files before validation:")
+import os
+print("Working directory:", os.getcwd())
+print("Listing data dir:")
+print(os.listdir(os.path.abspath("../data/preprocessed/temp/")))
+
+
 # run the checkpoint
 run_id = "temperature_run"
 checkpoint_result = checkpoint.run(
