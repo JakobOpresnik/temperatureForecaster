@@ -27,6 +27,11 @@ stages:
       - data/preprocessed/temp/:
           persist: true
 
+  list_preprocessed_files:
+    cmd: ls -lh data/preprocessed/temp/
+    deps:
+      - data/preprocessed/temp/
+
   validation:
     cmd: |
       cd gx && poetry run python run_validation.py
