@@ -43,11 +43,32 @@ print("Listing data dir:")
 print(os.listdir(os.path.abspath("../data/preprocessed/temp/")))
 
 
+stations = [station.split(".")[0] for station in os.listdir(os.path.abspath("../data/preprocessed/temp/"))]
+print("stations: ", stations)
+
+for station in stations:
+    checkpoint_result = checkpoint.run(
+        run_id=f"{station}_run",
+        validations=[
+            {
+                "expectation_suite_name": "temperature_suite",
+                "batch_request": {
+                    "datasource_name": datasource_name,
+                    "data_asset_name": data_asset_name,
+                    "options": {
+                        "station": station
+                    }
+                }
+            }
+        ]
+    )
+
+
 # run the checkpoint
-run_id = "temperature_run"
+""" run_id = "temperature_run"
 checkpoint_result = checkpoint.run(
     run_id=run_id
-)
+) """
 
 # build data docs
 context.build_data_docs()
