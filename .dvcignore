@@ -3,3 +3,7 @@
 # https://dvc.org/doc/user-guide/dvcignore
 
 gx/uncommitted
+gx/expectations/.ge_store_backend_id
+gx/expectations/temperature_suite.json
+gx/checkpoints/temperature_checkpoint.yml
+gx/plugins/custom_data_docs/styles/data_docs_custom_styles.css
