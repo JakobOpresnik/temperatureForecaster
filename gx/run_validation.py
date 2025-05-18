@@ -5,14 +5,11 @@ from pprint import pprint
 
 context = gx.get_context()
 
-# remove existing data source, if needed
-# context.sources.delete_pandas_filesystem("temperature")
-
 # make base directory absolute
 base_directory = os.path.abspath("../data/preprocessed/temp/")
 print(f"Resolved base_directory: {base_directory}")
 
-# create a new data source
+# create a new data source, or update it if it already exists
 datasource_name = "temperature"
 datasource = context.sources.add_or_update_pandas_filesystem(
     name=datasource_name,
@@ -29,12 +26,6 @@ data_asset = datasource.add_csv_asset(
 # list existing data sources
 print(context.datasources)
 
-
-# context = gx.get_context()
-
-# datasource_name = "temperature"
-# data_asset_name = "temperature_data"
-
 # load the data asset
 asset = context.get_datasource(datasource_name).get_asset(data_asset_name)
 
@@ -46,12 +37,18 @@ checkpoint = context.get_checkpoint(checkpoint_name)
 
 print(f"Checkpoint:\n{checkpoint}")
 
-
 batch_request = asset.build_batch_request()
-# batch_request = asset.build_batch_request({"station": "BOVEC"})
 batch_list = context.get_batch_list(
     batch_request=batch_request
 )
+
+validations = [
+    {
+        "batch_request": batch.batch_request,
+        "expectation_suite_name": "temperature_suite"
+    }
+    for batch in batch_list
+]
 
 print("\nValidation batches:")
 pprint([batch.batch_request.options for batch in batch_list])
@@ -62,33 +59,31 @@ print("Working directory:", os.getcwd())
 print("Listing data dir:")
 print(os.listdir(os.path.abspath("../data/preprocessed/temp/")))
 
-
-""" stations = [station.split(".")[0] for station in os.listdir(os.path.abspath("../data/preprocessed/temp/"))]
-print("stations: ", stations) """
-
-""" checkpoint_result = checkpoint.run(
-    validations=[
-        {
-            "expectation_suite_name": "temperature_suite",
-            "batch_request": batch_request,
-        }
-    ]
-) """
-
-
 # run the checkpoint
 run_id = "temperature_run"
 checkpoint_result = checkpoint.run(
+    expectation_suite_name="temperature_suite",
+    validations=validations,
     run_id=run_id
 )
 
+print("\n")
+
+# extract validation result and station name for each validated station
+for batch_id, validation_outcome in checkpoint_result["run_results"].items():
+    validation_result = validation_outcome["validation_result"]
+    station = validation_result["meta"]["active_batch_definition"]["batch_identifiers"].get("station", "unknown")
+    success = validation_result["success"]
+    print(f"Validation {'passed' if success else 'failed'} for station: {station}")
+
 # build data docs
+print("\nBuilding data docs...")
 context.build_data_docs()
 
-# check if checkpoint passed
+# check if all validations passed
 if checkpoint_result["success"]:
-    print("Validation passed!")
+    print("\nAll validations passed!")
     sys.exit(0)
 else:
-    print("Validation failed!")
+    print("\nSome validations failed!")
     sys.exit(1)
