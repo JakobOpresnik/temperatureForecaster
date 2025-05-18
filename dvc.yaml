@@ -34,10 +34,10 @@ stages:
 
   validation:
     cmd: |
-      cd gx && poetry run python run_validation.py
+      cd gx && poetry run python validate_data.py
     deps:
       - data/preprocessed/temp/
-      - gx/run_validation.py
+      - gx/validate_data.py
     outs:
       - gx/uncommitted:
           persist: true

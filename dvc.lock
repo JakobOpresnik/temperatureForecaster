@@ -60,14 +60,14 @@ stages:
       size: 1962195
       nfiles: 7
   validation:
-    cmd: "cd gx && poetry run python run_validation.py\n"
+    cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
       md5: ae6c2fb7e78501a79231cc6ab829f876.dir
       size: 1962195
       nfiles: 7
-    - path: gx/run_validation.py
+    - path: gx/validate_data.py
       hash: md5
       md5: d0a78eadada116d307d8f78a634b651e
       size: 2305
