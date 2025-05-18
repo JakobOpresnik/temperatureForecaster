@@ -103,7 +103,7 @@ fluent_datasources:
       temperature_data:
         type: csv
         batching_regex: (?P<station>.*)\.csv
-    base_directory: g:\Other computers\Home Desktop\Google Drive\FERI\MAGISTERIJ\4.
+    base_directory: G:\Other computers\Home Desktop\Google Drive\FERI\MAGISTERIJ\4.
       semester\Inzenirstvo Inteligentnih Sistemov\vaje\intelligent_system\data\preprocessed\temp
 notebooks:
 include_rendered_content:

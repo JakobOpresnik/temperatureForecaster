@@ -1,9 +1,36 @@
+import os
 import sys
 import great_expectations as gx
 from pprint import pprint
 
-
 context = gx.get_context()
+
+# remove existing data source, if needed
+context.sources.delete_pandas_filesystem("temperature")
+
+# make base directory absolute
+base_directory = os.path.abspath("../data/preprocessed/temp/")
+print(f"Resolved base_directory: {base_directory}")
+
+# create a new data source
+datasource_name = "temperature"
+datasource = context.sources.add_pandas_filesystem(
+    name=datasource_name,
+    base_directory=base_directory
+)
+
+# add new data asset to the data source
+data_asset_name = "temperature_data"
+data_asset = datasource.add_csv_asset(
+    name=data_asset_name,
+    batching_regex=r"(?P<station>.*)\.csv"
+)
+
+# list existing data sources
+print(context.datasources)
+
+
+# context = gx.get_context()
 
 datasource_name = "temperature"
 data_asset_name = "temperature_data"
@@ -19,7 +46,7 @@ checkpoint = context.get_checkpoint(checkpoint_name)
 
 
 # batch_request = asset.build_batch_request()
-batch_request = asset.build_batch_request(options={"station": "BOVEC"})
+batch_request = asset.build_batch_request({"station": "BOVEC"})
 batch_list = context.get_batch_list(
     batch_request=batch_request
 )
