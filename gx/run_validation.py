@@ -19,7 +19,8 @@ checkpoint = context.get_checkpoint(checkpoint_name)
 
 print(f"Checkpoint:\n{checkpoint}")
 
-batch_request = asset.build_batch_request()
+# batch_request = asset.build_batch_request()
+batch_request = asset.build_batch_request(options={"station": "BOVEC"})
 batch_list = context.get_batch_list(
     batch_request=batch_request
 )
@@ -67,13 +68,7 @@ checkpoint_result = checkpoint.run(
     validations=[
         {
             "expectation_suite_name": "temperature_suite",
-            "batch_request": {
-                "datasource_name": "temperature",
-                "data_asset_name": "temperature_data",
-                "options": {
-                    "station": "BOVEC"
-                }
-            }
+            "batch_request": batch_request,
         }
     ]
 )
