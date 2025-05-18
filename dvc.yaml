@@ -33,5 +33,6 @@ stages:
     deps:
       - data/preprocessed/temp/
       - gx/run_validation.py
-    outs_no_cache:
-      - gx/uncommitted
+    outs:
+      - gx/uncommitted:
+          persist: true
