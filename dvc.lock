@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: b19a9bb71b5b7863cfb6d44a1ae5f85c
-      size: 1466
+      md5: 2e00139bf4e68f43bc27b64545106ca9
+      size: 1427
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -23,21 +23,21 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 5965cd5b2ab5dca6cd1e64bc5c91a336.dir
-      size: 10024667
+      md5: 8e4215a5ee90331ab2da5da08097ca8c.dir
+      size: 10024822
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 5965cd5b2ab5dca6cd1e64bc5c91a336.dir
-      size: 10024667
+      md5: 8e4215a5ee90331ab2da5da08097ca8c.dir
+      size: 10024822
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
-      md5: 6330c84df6ed1dad53d8888de87045b0
-      size: 7151
+      md5: 56f72435d2037fad16fc6f6524e3553d
+      size: 7009
     params:
       params.yaml:
         preprocess.filter_half_hour_stations:
@@ -56,32 +56,32 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 5a761258f6939b90d6d452b13afefc37.dir
-      size: 1983188
+      md5: 14c966a24180b7c385f9d107d90c6b81.dir
+      size: 1961373
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python run_validation.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 5a761258f6939b90d6d452b13afefc37.dir
-      size: 1983188
+      md5: 14c966a24180b7c385f9d107d90c6b81.dir
+      size: 1961373
       nfiles: 7
     - path: gx/run_validation.py
       hash: md5
-      md5: 4211e816fde24ad95e948d8c845df06e
-      size: 1200
+      md5: 248b847ad8deaa8799e127a81acee839
+      size: 2957
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 680dd1b95ec6badf8cd6424caa06d85d.dir
-      size: 9254651
-      nfiles: 68
+      md5: 29bd19e08353842abcc9d9f6ee21f9f9.dir
+      size: 9341863
+      nfiles: 72
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 5a761258f6939b90d6d452b13afefc37.dir
-      size: 1983188
+      md5: 14c966a24180b7c385f9d107d90c6b81.dir
+      size: 1961373
       nfiles: 7
