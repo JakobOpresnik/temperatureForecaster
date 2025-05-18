@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: fcbead209d4735e332a052c0ead89b13.dir
-      size: 10023113
+      md5: e055ad271fda357be299981e38af6081.dir
+      size: 10024521
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: fcbead209d4735e332a052c0ead89b13.dir
-      size: 10023113
+      md5: e055ad271fda357be299981e38af6081.dir
+      size: 10024521
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -56,20 +56,24 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 2ffd226e9389eeaed3d8cb18f745b2e7.dir
-      size: 1969845
+      md5: 6e3485c4be6dc7e6218e1e2fd470b15d.dir
+      size: 1980890
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python run_validation.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 2ffd226e9389eeaed3d8cb18f745b2e7.dir
-      size: 1969845
+      md5: 6e3485c4be6dc7e6218e1e2fd470b15d.dir
+      size: 1980890
       nfiles: 7
+    - path: gx/run_validation.py
+      hash: md5
+      md5: c6a11a1c249a88577bb1ea0c5523ac3d
+      size: 2744
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 7e200886c2f93d72a76a08b0f7d36464.dir
-      size: 5341920
-      nfiles: 32
+      md5: 9cb5ae59fe104ea41543309f3be82e82.dir
+      size: 8003623
+      nfiles: 48
