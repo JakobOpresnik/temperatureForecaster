@@ -15,7 +15,3 @@
 __pycache__
 
 pat_token.txt
-
-gx/expectations/
-gx/checkpoints/
-gx/plugins/

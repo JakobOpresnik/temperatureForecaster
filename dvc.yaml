@@ -33,6 +33,5 @@ stages:
     deps:
       - data/preprocessed/temp/
     outs:
-      - gx/checkpoints
-      - gx/expectations
-      - gx/plugins
+      - gx:
+          persist: true
