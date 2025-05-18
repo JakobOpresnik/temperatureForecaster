@@ -23,9 +23,8 @@ stages:
       - preprocess.output_file_path_template
       - preprocess.filter_half_hour_stations
       - stations
-    outs:
-      - data/preprocessed/temp/:
-          persist: true
+    outs_no_cache:
+      - data/preprocessed/temp/
 
   validation:
     cmd: |
