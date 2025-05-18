@@ -17,7 +17,6 @@ print(f"Asset loaded:\n{asset}")
 checkpoint_name = "temperature_checkpoint"
 checkpoint = context.get_checkpoint(checkpoint_name)
 
-print(f"Checkpoint:\n{checkpoint}")
 
 # batch_request = asset.build_batch_request()
 batch_request = asset.build_batch_request(options={"station": "BOVEC"})
@@ -42,6 +41,9 @@ import os
 print("Working directory:", os.getcwd())
 print("Listing data dir:")
 print(os.listdir(os.path.abspath("../data/preprocessed/temp/")))
+
+
+print(f"Checkpoint:\n{checkpoint}")
 
 
 stations = [station.split(".")[0] for station in os.listdir(os.path.abspath("../data/preprocessed/temp/"))]
