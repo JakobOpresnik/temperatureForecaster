@@ -27,11 +27,6 @@ stages:
       - data/preprocessed/temp/:
           persist: true
 
-  list_preprocessed_files:
-    cmd: ls -lh data/preprocessed/temp/
-    deps:
-      - data/preprocessed/temp/
-
   validation:
     cmd: |
       cd gx && poetry run python validate_data.py
@@ -40,4 +35,13 @@ stages:
       - gx/validate_data.py
     outs:
       - gx/uncommitted:
+          persist: true
+
+  test_data:
+    cmd: poetry run python src/data/test_data.py
+    deps:
+      - data/preprocessed/temp
+      - src/data/temp_data.py
+    outs:
+      - data/reference/temp:
           persist: true

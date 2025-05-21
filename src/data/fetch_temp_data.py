@@ -3,6 +3,7 @@ import requests
 import yaml
 from datetime import datetime
 
+
 def fetch_temperature_data():
     params = yaml.safe_load(open("params.yaml"))["fetch"]
     stations = yaml.safe_load(open("params.yaml"))["stations"]

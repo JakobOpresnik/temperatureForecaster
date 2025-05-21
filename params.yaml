@@ -7,6 +7,27 @@ preprocess:
   xml_data_tag: 'metData'
   input_file_path_template: 'data/raw/temp/temp_data_{station}.xml'
   output_file_path_template: 'data/preprocessed/temp/{station}.csv'
+  data_columns:
+    - Location
+    - Date
+    - Temperature
+    - Temperature dew point
+    - Temperature average in time interval
+    - Temperature maximum in time interval
+    - Temperature minimum in time interval
+    - Humidity relative
+    - Humidity relative average in time interval
+    - Wind direction
+    - Wind direction average in time interval
+    - Wind direction maximum gust in time interval
+    - Wind speed
+    - Wind speed average in time interval
+    - Wind speed maximum in time interval
+    - Air pressure
+    - Air pressure average in time interval
+    - Precipitation total in time interval
+    - Solar radiation
+    - Solar radiation average in time interval
   filter_half_hour_stations:
     - PTUJ
 

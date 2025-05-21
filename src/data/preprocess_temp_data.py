@@ -5,6 +5,7 @@ import pandas as pd
 import yaml
 from lxml import etree as ET
 
+
 def preprocess_temperature_data():
     params = yaml.safe_load(open("params.yaml"))["preprocess"]
     stations = yaml.safe_load(open("params.yaml"))["stations"]
@@ -13,6 +14,7 @@ def preprocess_temperature_data():
     input_file_path_template = params["input_file_path_template"]
     output_file_path_template = params["output_file_path_template"]
     filter_half_hour_stations = params["filter_half_hour_stations"]
+    columns = params["data_columns"]
 
     for station in stations:
         input_file_path = input_file_path_template.format(station=station)
@@ -36,29 +38,6 @@ def preprocess_temperature_data():
             records = records[::-1]
             
             # initialize an empty DataFrame
-            columns = [
-                "Location", 
-                "Date", 
-                "Temperature", 
-                "Temperature dew point", 
-                "Temperature average in time interval", 
-                "Temperature maximum in time interval", 
-                "Temperature minimum in time interval", 
-                "Humidity relative", 
-                "Humidity relative average in time interval", 
-                "Wind direction", 
-                "Wind direction average in time interval", 
-                "Wind direction maximum gust in time interval", 
-                "Wind speed", 
-                "Wind speed average in time interval", 
-                "Wind speed maximum in time interval", 
-                "Air pressure", 
-                "Air pressure average in time interval", 
-                "Precipitation total in time interval", 
-                "Solar radiation", 
-                "Solar radiation average in time interval", 
-            ]
-
             df = pd.DataFrame(columns=columns)
 
             # check if csv file already exists

@@ -30,19 +30,24 @@ def test_temperature_data():
 
         reference_data = pd.read_csv(reference_path)
 
+        # no need to compare dates
         del reference_data["Date"]
-        del reference_data["Location"]
         del current_data["Date"]
-        del current_data["Location"]
 
         # drop completely empty columns if they occur
         reference_data.dropna(axis=1, how='all', inplace=True)
         current_data.dropna(axis=1, how='all', inplace=True)
 
+        # define drift detection parameters
+        drift_preset = DataDriftPreset(
+            drift_share=0.7,     # fraction of columns that must drift to trigger overall drift (lower means stricter)
+            num_threshold=0.05,  # fraction of rows (numerical values) inside a column that must drift to trigger column drift (p-value --> lower means stricter)
+        )
+
         # check if reference and current data have the same columns
         report = Report([
                 DataSummaryPreset(),
-                DataDriftPreset(),
+                drift_preset
             ],
             include_tests=True
         )
@@ -52,7 +57,7 @@ def test_temperature_data():
 
         # save report to HTML file
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        report_path = f"reports/data_testing_report_{station}_{timestamp}.html"
+        report_path = f"reports/{station}/data_testing_report_{station}_{timestamp}.html"
         result.save_html(report_path)
 
 
@@ -61,12 +66,13 @@ def test_temperature_data():
         result_dict = result.dict()
         if "tests" in result_dict:
             for test in result_dict["tests"]:
-                if "status" in test and test["status"] != "SUCCESS":
-                    all_tests_passed = False
-                    break
+                if "status" in test and "message" in test:
+                    print(f"{test['name']}: {test['status']}")
+                    print(f"Test message: {test['message']}")
+                    if test["status"] != "SUCCESS":
+                        all_tests_passed = False
+                        break
                     
-        print(f"Data tests {'passed' if all_tests_passed else 'failed'} for station: {station}")
-
         if not all_tests_passed:
             print(f"Data tests failed for station: {station}")
         else:
@@ -79,7 +85,3 @@ def test_temperature_data():
 
 if __name__ == "__main__":
     test_temperature_data()
-
-
-# load reference and current data
-# current_data = pd.read_csv("../data/preprocessed/temp")
