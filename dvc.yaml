@@ -41,7 +41,7 @@ stages:
     cmd: poetry run python src/data/test_data.py
     deps:
       - data/preprocessed/temp
-      - src/data/temp_data.py
+      - src/data/test_data.py
     outs:
       - data/reference/temp:
           persist: true

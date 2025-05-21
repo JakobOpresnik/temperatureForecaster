@@ -85,3 +85,21 @@ stages:
       md5: 1cd19aef236de5eeafe2fc0900b828e0.dir
       size: 2214530
       nfiles: 7
+  test_data:
+    cmd: poetry run python src/data/test_data.py
+    deps:
+    - path: data/preprocessed/temp
+      hash: md5
+      md5: 1cd19aef236de5eeafe2fc0900b828e0.dir
+      size: 2214530
+      nfiles: 7
+    - path: src/data/test_data.py
+      hash: md5
+      md5: 280c56e06d4ebc81de86c14484746aa8
+      size: 3568
+    outs:
+    - path: data/reference/temp
+      hash: md5
+      md5: b3fb79850dfe16e1db0decb9c7ea8ba9.dir
+      size: 2241842
+      nfiles: 7
