@@ -50,3 +50,5 @@ stages:
     outs:
       - data/reference/temp:
           persist: true
+      - reports:
+          persist: true
