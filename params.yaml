@@ -33,6 +33,7 @@ preprocess:
 
 test:
   reference_file_path_template: 'data/reference/temp/{station}.csv'
+  reports_file_path_template: 'reports/{station}'
 
 stations:
   - LENDAVA

@@ -16,6 +16,7 @@ def test_temperature_data():
 
     output_file_path_template = params_preprocessed["output_file_path_template"]
     reference_file_path_template = params_test["reference_file_path_template"]
+    reports_file_path_template = params_test["reports_file_path_template"]
 
     for station in stations:
         current_path = output_file_path_template.format(station=station)
@@ -55,10 +56,14 @@ def test_temperature_data():
         # run report on reference and current data
         result = report.run(reference_data=reference_data, current_data=current_data)
 
+        # create folder to save report if it doesn't exist yet
+        reports_path = reports_file_path_template.format(station=station)
+        if not os.path.exists(reports_path):
+            os.makedirs(reports_path)
+
         # save report to HTML file
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        report_path = f"reports/{station}/data_testing_report_{station}_{timestamp}.html"
-        result.save_html(report_path)
+        result.save_html(f"{reports_path}/data_testing_report_{station}_{timestamp}.html")
 
 
         # check if report contains any tests and if all tests passed
