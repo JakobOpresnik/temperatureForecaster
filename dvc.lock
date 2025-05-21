@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: 2e00139bf4e68f43bc27b64545106ca9
-      size: 1427
+      md5: 1aebfffd7dd1e33444759299dcd0a806
+      size: 1445
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -23,23 +23,44 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 872ff6487c367743e2ccf6f8a87315df.dir
-      size: 10006144
+      md5: 3ece4c7fc878d1cc24d5b130c033f63d.dir
+      size: 9996904
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 872ff6487c367743e2ccf6f8a87315df.dir
-      size: 10006144
+      md5: 3ece4c7fc878d1cc24d5b130c033f63d.dir
+      size: 9996904
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
-      md5: 56f72435d2037fad16fc6f6524e3553d
-      size: 7009
+      md5: 9d7622e606563284f2c17e8c448bd2fc
+      size: 6075
     params:
       params.yaml:
+        preprocess.data_columns:
+        - Location
+        - Date
+        - Temperature
+        - Temperature dew point
+        - Temperature average in time interval
+        - Temperature maximum in time interval
+        - Temperature minimum in time interval
+        - Humidity relative
+        - Humidity relative average in time interval
+        - Wind direction
+        - Wind direction average in time interval
+        - Wind direction maximum gust in time interval
+        - Wind speed
+        - Wind speed average in time interval
+        - Wind speed maximum in time interval
+        - Air pressure
+        - Air pressure average in time interval
+        - Precipitation total in time interval
+        - Solar radiation
+        - Solar radiation average in time interval
         preprocess.filter_half_hour_stations:
         - PTUJ
         preprocess.input_file_path_template: data/raw/temp/temp_data_{station}.xml
@@ -56,16 +77,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 1cd19aef236de5eeafe2fc0900b828e0.dir
-      size: 2214530
+      md5: fdf078596975b6d86aeeaa72207aba18.dir
+      size: 2219664
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 1cd19aef236de5eeafe2fc0900b828e0.dir
-      size: 2214530
+      md5: fdf078596975b6d86aeeaa72207aba18.dir
+      size: 2219664
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -74,9 +95,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 5c273ab7d805f82b0e36d06e9e0cac35.dir
-      size: 11130911
-      nfiles: 154
+      md5: f90e8ee912064983e024fbf4636912bf.dir
+      size: 11479995
+      nfiles: 170
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -90,16 +111,28 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 1cd19aef236de5eeafe2fc0900b828e0.dir
-      size: 2214530
+      md5: fdf078596975b6d86aeeaa72207aba18.dir
+      size: 2219664
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 280c56e06d4ebc81de86c14484746aa8
-      size: 3568
+      md5: 88db43861b011335238972cb1bcf1b19
+      size: 3482
+    params:
+      params.yaml:
+        preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
+        stations:
+        - LENDAVA
+        - PTUJ
+        - CELJE
+        - CRNOMELJ
+        - BOVEC
+        - MEZICA
+        - ROGLA
+        test.reference_file_path_template: data/reference/temp/{station}.csv
     outs:
     - path: data/reference/temp
       hash: md5
-      md5: b3fb79850dfe16e1db0decb9c7ea8ba9.dir
-      size: 2241842
+      md5: 443e7b5c8a2749da49c7d62e67fe0e94.dir
+      size: 2220030
       nfiles: 7
