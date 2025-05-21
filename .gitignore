@@ -2,6 +2,8 @@
 /data/*
 
 # But do NOT ignore DVC metadata files
+!data/**/*.dvc
+!data/**/.gitignore
 !/.dvc/
 !dvc.yaml
 !dvc.lock
