@@ -69,14 +69,12 @@ def test_temperature_data():
         # check if report contains any tests and if all tests passed
         all_tests_passed = True
         result_dict = result.dict()
+
         if "tests" in result_dict:
             for test in result_dict["tests"]:
-                if "status" in test and "message" in test:
-                    print(f"{test['name']}: {test['status']}")
-                    print(f"Test message: {test['message']}")
-                    if test["status"] != "SUCCESS":
-                        all_tests_passed = False
-                        break
+                if "status" in test and test["status"] != "SUCCESS":
+                    all_tests_passed = False
+                    break
                     
         if not all_tests_passed:
             print(f"Data tests failed for station: {station}")
