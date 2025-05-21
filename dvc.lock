@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: ec0e0239efc1ecd326d1a071c0d9251a.dir
-      size: 9978729
+      md5: ddee713dde2a234457788ee4fbbc5202.dir
+      size: 9978850
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: ec0e0239efc1ecd326d1a071c0d9251a.dir
-      size: 9978729
+      md5: ddee713dde2a234457788ee4fbbc5202.dir
+      size: 9978850
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -77,16 +77,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
-      size: 2222472
+      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
+      size: 2223253
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
-      size: 2222472
+      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
+      size: 2223253
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -95,9 +95,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 954d71635d2108ef8fc6969e5010b68f.dir
-      size: 11829080
-      nfiles: 186
+      md5: 89c62fa3d6a390e6ed3728b85e451d07.dir
+      size: 12178163
+      nfiles: 202
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -111,13 +111,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
-      size: 2222472
+      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
+      size: 2223253
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: a9cdc17f4d4596e42290c7ceb10cf4f1
-      size: 3741
+      md5: b95c419dbb3b76a4b28facbb9c7f0de3
+      size: 3567
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -134,11 +134,11 @@ stages:
     outs:
     - path: data/reference/temp
       hash: md5
-      md5: ca93f5724ef32bd26fb2c1895752fdd6.dir
-      size: 2222750
+      md5: 3b58719fc622c4b05593dd1f4754e31a.dir
+      size: 2223291
       nfiles: 7
     - path: reports
       hash: md5
-      md5: d4316009d1b047fb89266970501b4f90.dir
-      size: 40650605
-      nfiles: 7
+      md5: f85904bb7b681c92513e031a0cebe2fa.dir
+      size: 81293059
+      nfiles: 14
