@@ -5,7 +5,7 @@ import pandas as pd
 import yaml
 from lxml import etree as ET
 
-def preprocess_temp_data():
+def preprocess_temperature_data():
     params = yaml.safe_load(open("params.yaml"))["preprocess"]
     stations = yaml.safe_load(open("params.yaml"))["stations"]
 
@@ -139,5 +139,6 @@ def preprocess_temp_data():
             # print error message if there is a problem preprocessing the file
             print(f"Error preprocessing data: {e}")
 
+
 if __name__ == "__main__":
-    preprocess_temp_data()
+    preprocess_temperature_data()

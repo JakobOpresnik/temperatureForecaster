@@ -3,7 +3,7 @@ import requests
 import yaml
 from datetime import datetime
 
-def fetch_air_data():
+def fetch_temperature_data():
     params = yaml.safe_load(open("params.yaml"))["fetch"]
     stations = yaml.safe_load(open("params.yaml"))["stations"]
 
@@ -36,5 +36,6 @@ def fetch_air_data():
             # print error message if there is a problem fetching the file
             print(f"Error fetching data: {e}")
 
+
 if __name__ == "__main__":
-    fetch_air_data()
+    fetch_temperature_data()

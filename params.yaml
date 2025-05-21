@@ -10,6 +10,9 @@ preprocess:
   filter_half_hour_stations:
     - PTUJ
 
+test:
+  reference_file_path_template: 'data/reference/temp/{station}.csv'
+
 stations:
   - LENDAVA
   - PTUJ

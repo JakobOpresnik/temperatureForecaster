@@ -1,0 +1,85 @@
+import os
+import pandas as pd
+from evidently import Report
+from evidently.presets.dataset_stats import DataSummaryPreset
+from evidently.presets.drift import DataDriftPreset
+import yaml
+from datetime import datetime
+
+
+def test_temperature_data():
+    print("Current working directory:", os.getcwd())
+
+    params_preprocessed = yaml.safe_load(open("params.yaml"))["preprocess"]
+    params_test = yaml.safe_load(open("params.yaml"))["test"]
+    stations = yaml.safe_load(open("params.yaml"))["stations"]
+
+    output_file_path_template = params_preprocessed["output_file_path_template"]
+    reference_file_path_template = params_test["reference_file_path_template"]
+
+    for station in stations:
+        current_path = output_file_path_template.format(station=station)
+        current_data = pd.read_csv(current_path)
+        reference_path = reference_file_path_template.format(station=station)
+
+        path_exists = os.path.exists(reference_path)
+        if not path_exists:
+            print(f"Reference file not found. Copying from current data to {reference_path}.")
+            os.makedirs(os.path.dirname(reference_path), exist_ok=True)
+            current_data.to_csv(reference_path, index=False)
+
+        reference_data = pd.read_csv(reference_path)
+
+        del reference_data["Date"]
+        del reference_data["Location"]
+        del current_data["Date"]
+        del current_data["Location"]
+
+        # drop completely empty columns if they occur
+        reference_data.dropna(axis=1, how='all', inplace=True)
+        current_data.dropna(axis=1, how='all', inplace=True)
+
+        # check if reference and current data have the same columns
+        report = Report([
+                DataSummaryPreset(),
+                DataDriftPreset(),
+            ],
+            include_tests=True
+        )
+
+        # run report on reference and current data
+        result = report.run(reference_data=reference_data, current_data=current_data)
+
+        # save report to HTML file
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        report_path = f"reports/data_testing_report_{station}_{timestamp}.html"
+        result.save_html(report_path)
+
+
+        # check if report contains any tests and if all tests passed
+        all_tests_passed = True
+        result_dict = result.dict()
+        if "tests" in result_dict:
+            for test in result_dict["tests"]:
+                if "status" in test and test["status"] != "SUCCESS":
+                    all_tests_passed = False
+                    break
+                    
+        print(f"Data tests {'passed' if all_tests_passed else 'failed'} for station: {station}")
+
+        if not all_tests_passed:
+            print(f"Data tests failed for station: {station}")
+        else:
+            print(f"Data tests passed for station: {station}")
+            # replace reference data with current data
+            os.remove(reference_path)
+            current = pd.read_csv(current_path)
+            current.to_csv(reference_path, index=False)
+ 
+
+if __name__ == "__main__":
+    test_temperature_data()
+
+
+# load reference and current data
+# current_data = pd.read_csv("../data/preprocessed/temp")
