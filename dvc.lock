@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: e15242d4646d1559d86f8c337b72c636
-      size: 1486
+      md5: 1aebfffd7dd1e33444759299dcd0a806
+      size: 1445
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -23,21 +23,21 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 3ece4c7fc878d1cc24d5b130c033f63d.dir
-      size: 9996904
+      md5: ec0e0239efc1ecd326d1a071c0d9251a.dir
+      size: 9978729
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 3ece4c7fc878d1cc24d5b130c033f63d.dir
-      size: 9996904
+      md5: ec0e0239efc1ecd326d1a071c0d9251a.dir
+      size: 9978729
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
-      md5: f21473aaa4ab51bff4bab805a3d44965
-      size: 6197
+      md5: 9d7622e606563284f2c17e8c448bd2fc
+      size: 6075
     params:
       params.yaml:
         preprocess.data_columns:
@@ -77,27 +77,27 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: fdf078596975b6d86aeeaa72207aba18.dir
-      size: 2219664
+      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
+      size: 2222472
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: fdf078596975b6d86aeeaa72207aba18.dir
-      size: 2219664
+      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
+      size: 2222472
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
-      md5: 64e36f9ab79453bec5b1094266194826
-      size: 2571
+      md5: bf9391e4acff532742eeaaf663ee7637
+      size: 2483
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: f90e8ee912064983e024fbf4636912bf.dir
-      size: 11479995
-      nfiles: 170
+      md5: 954d71635d2108ef8fc6969e5010b68f.dir
+      size: 11829080
+      nfiles: 186
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -111,13 +111,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: fdf078596975b6d86aeeaa72207aba18.dir
-      size: 2219664
+      md5: a4489e7bba4fadbd76cfdb8074ab8b5d.dir
+      size: 2222472
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 280c56e06d4ebc81de86c14484746aa8
-      size: 3568
+      md5: a9cdc17f4d4596e42290c7ceb10cf4f1
+      size: 3741
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -130,14 +130,15 @@ stages:
         - MEZICA
         - ROGLA
         test.reference_file_path_template: data/reference/temp/{station}.csv
+        test.reports_file_path_template: reports/{station}
     outs:
     - path: data/reference/temp
       hash: md5
-      md5: 443e7b5c8a2749da49c7d62e67fe0e94.dir
-      size: 2220030
+      md5: ca93f5724ef32bd26fb2c1895752fdd6.dir
+      size: 2222750
       nfiles: 7
     - path: reports
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: d4316009d1b047fb89266970501b4f90.dir
+      size: 40650605
+      nfiles: 7
