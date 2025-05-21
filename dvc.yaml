@@ -22,6 +22,7 @@ stages:
       - preprocess.input_file_path_template
       - preprocess.output_file_path_template
       - preprocess.filter_half_hour_stations
+      - preprocess.data_columns
       - stations
     outs:
       - data/preprocessed/temp/:
@@ -42,6 +43,10 @@ stages:
     deps:
       - data/preprocessed/temp
       - src/data/test_data.py
+    params:
+      - preprocess.output_file_path_template
+      - test.reference_file_path_template
+      - stations
     outs:
       - data/reference/temp:
           persist: true
