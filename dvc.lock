@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: ddee713dde2a234457788ee4fbbc5202.dir
-      size: 9978850
+      md5: ddf7dcb55e90421eb58b76ec7796230a.dir
+      size: 10011285
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: ddee713dde2a234457788ee4fbbc5202.dir
-      size: 9978850
+      md5: ddf7dcb55e90421eb58b76ec7796230a.dir
+      size: 10011285
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -77,16 +77,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
-      size: 2223253
+      md5: d9218db3c1dddb0ae5b4bf1b23068b81.dir
+      size: 2240215
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
-      size: 2223253
+      md5: d9218db3c1dddb0ae5b4bf1b23068b81.dir
+      size: 2240215
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -95,9 +95,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 89c62fa3d6a390e6ed3728b85e451d07.dir
-      size: 12178163
-      nfiles: 202
+      md5: 722ab3d54d89b826119e3ddcd555f524.dir
+      size: 12527248
+      nfiles: 218
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -111,8 +111,8 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: d660004a9202fc4a39c85d5ea9ec5660.dir
-      size: 2223253
+      md5: d9218db3c1dddb0ae5b4bf1b23068b81.dir
+      size: 2240215
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
@@ -134,11 +134,11 @@ stages:
     outs:
     - path: data/reference/temp
       hash: md5
-      md5: 3b58719fc622c4b05593dd1f4754e31a.dir
-      size: 2223291
+      md5: d48ecb291c99ded9438d3497e0dc8fb0.dir
+      size: 2234739
       nfiles: 7
     - path: reports
       hash: md5
-      md5: f85904bb7b681c92513e031a0cebe2fa.dir
-      size: 81293059
-      nfiles: 14
+      md5: 9f4e5a0b9052343381350a34eba7a815.dir
+      size: 121957979
+      nfiles: 21
