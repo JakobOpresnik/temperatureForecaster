@@ -74,7 +74,19 @@ for batch_id, validation_outcome in checkpoint_result["run_results"].items():
     validation_result = validation_outcome["validation_result"]
     station = validation_result["meta"]["active_batch_definition"]["batch_identifiers"].get("station", "unknown")
     success = validation_result["success"]
-    print(f"Validation {'passed' if success else 'failed'} for station: {station}")
+
+    print(f"Validation {'PASSED' if success else 'FAILED'} for station: {station}")
+
+    if not success:
+        print("Failed expectations:")
+        for result in validation_result["results"]:
+            if not result["success"]:
+                expectation_type = result["expectation_config"]["expectation_type"]
+                column = result["expectation_config"]["kwargs"].get("column", "[non-column]")
+                details = result["expectation_config"]["kwargs"]
+                print(f" - {expectation_type} on column '{column}'")
+                print(f"\n   failed with parameters: {details}")
+
 
 # build data docs
 print("\nBuilding data docs...")
