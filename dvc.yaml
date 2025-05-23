@@ -34,6 +34,13 @@ stages:
     deps:
       - data/preprocessed/temp/
       - gx/validate_data.py
+    params:
+      - validate.base_dir
+      - validate.data_source_name
+      - validate.data_asset_name
+      - validate.checkpoint_name
+      - validate.checkpoint_run_id
+      - validate.expectation_suite_name
     outs:
       - gx/uncommitted:
           persist: true

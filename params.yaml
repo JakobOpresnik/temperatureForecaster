@@ -31,6 +31,14 @@ preprocess:
   filter_half_hour_stations:
     - PTUJ
 
+validate:
+  base_dir: '../data/preprocessed/temp/'
+  data_source_name: 'temperature'
+  data_asset_name: 'temperature_data'
+  checkpoint_name: 'temperature_checkpoint'
+  checkpoint_run_id: 'temperature_run'
+  expectation_suite_name: 'temperature_suite'
+
 test:
   reference_file_path_template: 'data/reference/temp/{station}.csv'
   reports_file_path_template: 'reports/{station}'
