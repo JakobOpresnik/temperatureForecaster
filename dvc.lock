@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 8463e0d54bd55f472d1bb4545cd86ca9.dir
-      size: 10033075
+      md5: 43354d8fb192d71c61e937efb19ad8ec.dir
+      size: 10032569
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 8463e0d54bd55f472d1bb4545cd86ca9.dir
-      size: 10033075
+      md5: 43354d8fb192d71c61e937efb19ad8ec.dir
+      size: 10032569
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -77,27 +77,35 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 171e0eed99192a86aff1615e268f1318.dir
-      size: 2317955
+      md5: a27493e715dcc74ca0dc37f361f52754.dir
+      size: 2328703
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 171e0eed99192a86aff1615e268f1318.dir
-      size: 2317955
+      md5: a27493e715dcc74ca0dc37f361f52754.dir
+      size: 2328703
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
-      md5: f6aa4b08eb1235689f7e3c17de25f53e
-      size: 3009
+      md5: 362e6c11507fb12a6a4faea19ad28cde
+      size: 4125
+    params:
+      params.yaml:
+        validate.base_dir: ../data/preprocessed/temp/
+        validate.checkpoint_name: temperature_checkpoint
+        validate.checkpoint_run_id: temperature_run
+        validate.data_asset_name: temperature_data
+        validate.data_source_name: temperature
+        validate.expectation_suite_name: temperature_suite
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 26dd9be777c43615bdbc5f2a5a014ae6.dir
-      size: 13565097
-      nfiles: 234
+      md5: c2572b91db91849a62f22d6cb5f924db.dir
+      size: 14579649
+      nfiles: 250
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -111,13 +119,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 171e0eed99192a86aff1615e268f1318.dir
-      size: 2317955
+      md5: a27493e715dcc74ca0dc37f361f52754.dir
+      size: 2328703
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: b95c419dbb3b76a4b28facbb9c7f0de3
-      size: 3567
+      md5: 695def84617eddd89a6b7ef37ac9e903
+      size: 4066
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -139,6 +147,6 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 87f564be03b4a51c8a735c00f710af70.dir
-      size: 162695410
-      nfiles: 28
+      md5: 99af1073e3f8e3b1d21917130b1d63f9.dir
+      size: 203433645
+      nfiles: 35
