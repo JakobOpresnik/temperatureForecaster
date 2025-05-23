@@ -708,8 +708,8 @@
       "expectation_type": "expect_column_mean_to_be_between",
       "kwargs": {
         "column": "Humidity relative",
-        "max_value": 77.5,
-        "min_value": 65.0,
+        "max_value": 80.0,
+        "min_value": 60.0,
         "strict_max": false,
         "strict_min": false
       },

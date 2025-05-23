@@ -85,7 +85,7 @@ for batch_id, validation_outcome in checkpoint_result["run_results"].items():
                 column = result["expectation_config"]["kwargs"].get("column", "[non-column]")
                 details = result["expectation_config"]["kwargs"]
                 print(f" - {expectation_type} on column '{column}'")
-                print(f"\n   failed with parameters: {details}")
+                print(f"   failed with parameters: {details}")
 
 
 # build data docs
