@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 43354d8fb192d71c61e937efb19ad8ec.dir
-      size: 10032569
+      md5: c543e4644a929717b7e6520d5e8d2cf7.dir
+      size: 10040008
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 43354d8fb192d71c61e937efb19ad8ec.dir
-      size: 10032569
+      md5: c543e4644a929717b7e6520d5e8d2cf7.dir
+      size: 10040008
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -77,16 +77,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: a27493e715dcc74ca0dc37f361f52754.dir
-      size: 2328703
+      md5: 50b5d2efb70649aa4088c7b7f91761a8.dir
+      size: 2334069
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: a27493e715dcc74ca0dc37f361f52754.dir
-      size: 2328703
+      md5: 50b5d2efb70649aa4088c7b7f91761a8.dir
+      size: 2334069
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -103,9 +103,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: c2572b91db91849a62f22d6cb5f924db.dir
-      size: 14579649
-      nfiles: 250
+      md5: 0fa87b98d0c892bc7ef51e0274a858a6.dir
+      size: 15594124
+      nfiles: 266
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -119,13 +119,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: a27493e715dcc74ca0dc37f361f52754.dir
-      size: 2328703
+      md5: 50b5d2efb70649aa4088c7b7f91761a8.dir
+      size: 2334069
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 695def84617eddd89a6b7ef37ac9e903
-      size: 4066
+      md5: b2517a6e88f7ef8ab8d85a1cea7eb3a5
+      size: 4065
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -147,6 +147,6 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 99af1073e3f8e3b1d21917130b1d63f9.dir
-      size: 203433645
-      nfiles: 35
+      md5: 369921849faceab61859ba668b7987e8.dir
+      size: 244174101
+      nfiles: 42
