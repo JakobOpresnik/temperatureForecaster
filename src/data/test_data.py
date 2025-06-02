@@ -41,7 +41,7 @@ def check_test_results(result, station, reference_path, current_path):
                 if "name" in test:
                     print(f"FAILED TEST: {test['name'].split(":")[0]}")
                 if "description" in test:
-                    print(test["description"].split(":")[-1])
+                    print(test["description"].split(':')[-1])
                 break
                 
     if not all_tests_passed:
