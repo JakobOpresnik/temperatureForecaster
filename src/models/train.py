@@ -57,6 +57,10 @@ def train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, l
             print(f"Early stopping triggered at epoch {epoch+1}")
             break
 
+    # ensure the directory exists
+    os.makedirs(os.path.dirname(model_full_path), exist_ok=True)
+
+    # save trained model
     torch.save(model.state_dict(), model_full_path)
     print(f"Trained model saved to {model_full_path}")
 
