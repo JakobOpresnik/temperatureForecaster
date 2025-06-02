@@ -43,11 +43,38 @@ test:
   reference_file_path_template: 'data/reference/temp/{station}.csv'
   reports_file_path_template: 'reports/{station}'
 
+train:
+  target_column: 'Temperature'
+  columns_to_drop:
+    - Location
+    - Temperature average in time interval
+    - Temperature maximum in time interval
+    - Temperature minimum in time interval
+    - Humidity relative average in time interval
+    - Wind direction average in time interval
+    - Wind direction maximum gust in time interval
+    - Wind speed average in time interval
+    - Wind speed maximum in time interval
+    - Air pressure average in time interval
+    - Solar radiation average in time interval
+  temp_scaler_name: 'temp_scaler.pkl'
+  other_scaler_name: 'other_scaler.pkl'
+  model_path_template: 'models/{station}/'
+  model_name_template: 'temperature_forecaster_{station}_{timestamp}.pt'
+  plot_name_template: 'results_{station}_{timestamp}.png'
+  lookback: 240
+  forecast_horizon: 6
+  test_size: 0.2
+  val_size: 0.2
+  batch_size: 32
+  hidden_size: 128
+  num_layers: 3
+  dropout: 0.123
+  learning_rate: 0.0097
+  patience: 7
+  min_delta: 0.001
+  epochs: 75
+
 stations:
   - LENDAVA
   - PTUJ
-  - CELJE
-  - CRNOMELJ
-  - BOVEC
-  - MEZICA
-  - ROGLA
