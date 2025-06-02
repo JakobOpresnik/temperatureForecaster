@@ -150,3 +150,81 @@ stages:
       md5: b51dd202b58d7d1487ac49fd8c46c984.dir
       size: 611448696
       nfiles: 105
+  train_model:
+    cmd: "poetry run python src/models/train.py\ngit commit -am \"Updated model on
+      $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows\" || true\n
+      git push || true\ndvc push || true\n"
+    deps:
+    - path: data/preprocessed/temp/
+      hash: md5
+      md5: 9e0d0a8f04711053232022a055322a7f.dir
+      size: 2750477
+      nfiles: 7
+    - path: data/reference/temp/
+      hash: md5
+      md5: d48ecb291c99ded9438d3497e0dc8fb0.dir
+      size: 2234739
+      nfiles: 7
+    - path: gx/uncommitted
+      hash: md5
+      md5: c9747a5ad7661a36ba60d8013046fc3d.dir
+      size: 24723784
+      nfiles: 410
+    - path: src/models/model.py
+      hash: md5
+      md5: 8c23b32493b9d358848effa451e808b3
+      size: 3116
+    - path: src/models/preprocess.py
+      hash: md5
+      md5: 03ced3910dc52e90b0d0d23c3e1e122b
+      size: 4053
+    - path: src/models/train.py
+      hash: md5
+      md5: 7eb081ce3d366834086d08f49287c369
+      size: 8234
+    params:
+      params.yaml:
+        stations:
+        - LENDAVA
+        - PTUJ
+        - CELJE
+        - CRNOMELJ
+        - BOVEC
+        - MEZICA
+        - ROGLA
+        train.batch_size: 32
+        train.columns_to_drop:
+        - Location
+        - Temperature average in time interval
+        - Temperature maximum in time interval
+        - Temperature minimum in time interval
+        - Humidity relative average in time interval
+        - Wind direction average in time interval
+        - Wind direction maximum gust in time interval
+        - Wind speed average in time interval
+        - Wind speed maximum in time interval
+        - Air pressure average in time interval
+        - Solar radiation average in time interval
+        train.dropout: 0.123
+        train.epochs: 75
+        train.forecast_horizon: 6
+        train.hidden_size: 128
+        train.learning_rate: 0.0097
+        train.lookback: 240
+        train.min_delta: 0.001
+        train.model_name_template: temperature_forecaster_{station}_{timestamp}.pt
+        train.model_path_template: models/{station}/
+        train.num_layers: 3
+        train.other_scaler_name: other_scaler.pkl
+        train.patience: 7
+        train.plot_name_template: results_{station}_{timestamp}.png
+        train.target_column: Temperature
+        train.temp_scaler_name: temp_scaler.pkl
+        train.test_size: 0.2
+        train.val_size: 0.2
+    outs:
+    - path: models/
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0

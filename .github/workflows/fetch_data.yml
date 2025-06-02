@@ -57,6 +57,7 @@ jobs:
           dvc pull
           dvc status
           dvc repro
+          dvc commit
           dvc push
           git add dvc.lock
           git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || true

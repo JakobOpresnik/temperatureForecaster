@@ -68,9 +68,9 @@ stages:
       git push || true
       dvc push || true
     deps:
-      - src/model/model.py
-      - src/model/preprocess.py
-      - src/model/train.py
+      - src/models/model.py
+      - src/models/preprocess.py
+      - src/models/train.py
       - data/preprocessed/temp/
       - data/reference/temp/
       - gx/uncommitted
