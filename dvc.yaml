@@ -64,7 +64,7 @@ stages:
   train_model:
     cmd: |
       poetry run python src/models/train.py
-      git commit -am "Updated model on `date` with DVC pipeline and GitHub workflows" || true
+      git commit -am "Updated model on $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows" || true
       git push || true
       dvc push || true
     deps:
