@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: e15242d4646d1559d86f8c337b72c636
-      size: 1486
+      md5: 1aebfffd7dd1e33444759299dcd0a806
+      size: 1445
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -18,26 +18,24 @@ stages:
         - CELJE
         - CRNOMELJ
         - BOVEC
-        - MEZICA
-        - ROGLA
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: d228818850ed9fa924131323f8f3f1c9.dir
-      size: 9996313
-      nfiles: 7
+      md5: 57576f35f8c0354d4625fc5f3076265e.dir
+      size: 5563169
+      nfiles: 5
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: d228818850ed9fa924131323f8f3f1c9.dir
-      size: 9996313
-      nfiles: 7
+      md5: 57576f35f8c0354d4625fc5f3076265e.dir
+      size: 5563169
+      nfiles: 5
     - path: src/data/preprocess_temp_data.py
       hash: md5
-      md5: f21473aaa4ab51bff4bab805a3d44965
-      size: 6197
+      md5: 9d7622e606563284f2c17e8c448bd2fc
+      size: 6075
     params:
       params.yaml:
         preprocess.data_columns:
@@ -72,26 +70,24 @@ stages:
         - CELJE
         - CRNOMELJ
         - BOVEC
-        - MEZICA
-        - ROGLA
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 3b95c179642d3030fdc72d798c5d617f.dir
-      size: 2858170
+      md5: c89c337830f0acaccd220403f878273f.dir
+      size: 2847896
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 3b95c179642d3030fdc72d798c5d617f.dir
-      size: 2858170
+      md5: c89c337830f0acaccd220403f878273f.dir
+      size: 2847896
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
-      md5: 718b093aa99787d8a81653d438f10f58
-      size: 4253
+      md5: 362e6c11507fb12a6a4faea19ad28cde
+      size: 4125
     params:
       params.yaml:
         validate.base_dir: ../data/preprocessed/temp/
@@ -103,9 +99,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 4fe6e1c5a0cb90998badbbb6808e4cd8.dir
-      size: 27772961
-      nfiles: 458
+      md5: 5e1ad2ef0f8355304f28d2db918a9f2f.dir
+      size: 28786678
+      nfiles: 474
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -119,13 +115,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 3b95c179642d3030fdc72d798c5d617f.dir
-      size: 2858170
+      md5: c89c337830f0acaccd220403f878273f.dir
+      size: 2847896
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 321195881f04b57036278bb99d8fe3e8
-      size: 4165
+      md5: 47e9ce852765445c0644052357d28223
+      size: 4061
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -135,8 +131,6 @@ stages:
         - CELJE
         - CRNOMELJ
         - BOVEC
-        - MEZICA
-        - ROGLA
         test.reference_file_path_template: data/reference/temp/{station}.csv
         test.reports_file_path_template: reports/{station}
     outs:
@@ -147,9 +141,9 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 37e64c46f290272f247d0c687bccf589.dir
-      size: 711410196
-      nfiles: 126
+      md5: b1a6e93f1463eb9cdba919f44a4cd6a2.dir
+      size: 735958146
+      nfiles: 131
   train_model:
     cmd: "poetry run python src/models/train.py\ngit commit -am \"Updated model on
       $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows\" || true\n
