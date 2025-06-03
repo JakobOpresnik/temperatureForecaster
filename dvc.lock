@@ -145,9 +145,7 @@ stages:
       size: 785059306
       nfiles: 141
   train_model:
-    cmd: "poetry run python src/models/train.py\ngit commit -am \"Updated model on
-      $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows\" || true\n
-      git push || true\ndvc push || true\n"
+    cmd: poetry run python src/models/train.py
     deps:
     - path: data/preprocessed/temp/
       hash: md5
