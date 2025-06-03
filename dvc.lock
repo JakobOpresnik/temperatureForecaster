@@ -23,16 +23,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: e37a9e13d3c7410f153390bb6738f5da.dir
-      size: 10022787
+      md5: d228818850ed9fa924131323f8f3f1c9.dir
+      size: 9996313
       nfiles: 7
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: e37a9e13d3c7410f153390bb6738f5da.dir
-      size: 10022787
+      md5: d228818850ed9fa924131323f8f3f1c9.dir
+      size: 9996313
       nfiles: 7
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -77,16 +77,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 9e0d0a8f04711053232022a055322a7f.dir
-      size: 2750477
+      md5: 3b95c179642d3030fdc72d798c5d617f.dir
+      size: 2858170
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 9e0d0a8f04711053232022a055322a7f.dir
-      size: 2750477
+      md5: 3b95c179642d3030fdc72d798c5d617f.dir
+      size: 2858170
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -103,9 +103,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: c9747a5ad7661a36ba60d8013046fc3d.dir
-      size: 24723784
-      nfiles: 410
+      md5: 4fe6e1c5a0cb90998badbbb6808e4cd8.dir
+      size: 27772961
+      nfiles: 458
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -119,12 +119,12 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 9e0d0a8f04711053232022a055322a7f.dir
-      size: 2750477
+      md5: 3b95c179642d3030fdc72d798c5d617f.dir
+      size: 2858170
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 329f622d75156076f8d7e50b9a658df3
+      md5: 321195881f04b57036278bb99d8fe3e8
       size: 4165
     params:
       params.yaml:
@@ -147,9 +147,9 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: b51dd202b58d7d1487ac49fd8c46c984.dir
-      size: 611448696
-      nfiles: 105
+      md5: 37e64c46f290272f247d0c687bccf589.dir
+      size: 711410196
+      nfiles: 126
   train_model:
     cmd: "poetry run python src/models/train.py\ngit commit -am \"Updated model on
       $(date --iso-8601=seconds) with DVC pipeline and GitHub workflows\" || true\n
