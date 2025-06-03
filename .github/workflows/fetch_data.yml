@@ -52,19 +52,13 @@ jobs:
           git pull origin main || echo "Nothing to pull"
           dvc pull || echo "No remote data to pull"
 
-      - name: Run DVC pipeline
+      - name: Run DVC pipeline and push results
         run: |
           dvc pull
           dvc status
           dvc repro
           dvc commit
           dvc push
-          git add dvc.lock
-          git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || true
-          git push || true
-
-      - name: Commit updated dvc.lock (if changed)
-        run: |
           git add dvc.lock
           git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
           git push || echo "Nothing to push"
