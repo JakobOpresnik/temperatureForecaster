@@ -14,24 +14,20 @@ stages:
         fetch.station_url_suffix: observationAms_{station}_history.xml
         stations:
         - LENDAVA
-        - PTUJ
-        - CELJE
-        - CRNOMELJ
-        - BOVEC
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 98a136a083d40e99181b94dc3de91e10.dir
-      size: 5554673
-      nfiles: 5
+      md5: c1829ac61fe9d7fba57aa33e0f94ccc2.dir
+      size: 766557
+      nfiles: 1
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 98a136a083d40e99181b94dc3de91e10.dir
-      size: 5554673
-      nfiles: 5
+      md5: c1829ac61fe9d7fba57aa33e0f94ccc2.dir
+      size: 766557
+      nfiles: 1
     - path: src/data/preprocess_temp_data.py
       hash: md5
       md5: 9d7622e606563284f2c17e8c448bd2fc
@@ -66,23 +62,19 @@ stages:
         preprocess.xml_data_tag: metData
         stations:
         - LENDAVA
-        - PTUJ
-        - CELJE
-        - CRNOMELJ
-        - BOVEC
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: e20b49ccb141af894c5ea25a9f184348.dir
-      size: 2849902
+      md5: 87955e5bb6c9da46fa362caadacf1f08.dir
+      size: 2849906
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: e20b49ccb141af894c5ea25a9f184348.dir
-      size: 2849902
+      md5: 87955e5bb6c9da46fa362caadacf1f08.dir
+      size: 2849906
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -99,9 +91,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 235d4ba6c79f87ec59a3bdd1394af991.dir
-      size: 30814994
-      nfiles: 506
+      md5: 90426a9d1c5657ae1593455cb4c9be81.dir
+      size: 31829149
+      nfiles: 522
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -115,8 +107,8 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: e20b49ccb141af894c5ea25a9f184348.dir
-      size: 2849902
+      md5: 87955e5bb6c9da46fa362caadacf1f08.dir
+      size: 2849906
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
@@ -127,10 +119,6 @@ stages:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
         stations:
         - LENDAVA
-        - PTUJ
-        - CELJE
-        - CRNOMELJ
-        - BOVEC
         test.reference_file_path_template: data/reference/temp/{station}.csv
         test.reports_file_path_template: reports/{station}
     outs:
@@ -141,16 +129,16 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 780fe91b298272760418634e6e15118d.dir
-      size: 785059306
-      nfiles: 141
+      md5: 2c1133f80ec8e48d3ef1f9f40e71f30e.dir
+      size: 790062469
+      nfiles: 142
   train_model:
     cmd: poetry run python src/models/train.py
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 9e0d0a8f04711053232022a055322a7f.dir
-      size: 2750477
+      md5: 87955e5bb6c9da46fa362caadacf1f08.dir
+      size: 2849906
       nfiles: 7
     - path: data/reference/temp/
       hash: md5
@@ -159,31 +147,25 @@ stages:
       nfiles: 7
     - path: gx/uncommitted
       hash: md5
-      md5: c9747a5ad7661a36ba60d8013046fc3d.dir
-      size: 24723784
-      nfiles: 410
+      md5: 90426a9d1c5657ae1593455cb4c9be81.dir
+      size: 31829149
+      nfiles: 522
     - path: src/models/model.py
       hash: md5
-      md5: 8c23b32493b9d358848effa451e808b3
-      size: 3116
+      md5: d0ae3518d6f52d7ea92292ad7a40b020
+      size: 3006
     - path: src/models/preprocess.py
       hash: md5
-      md5: 03ced3910dc52e90b0d0d23c3e1e122b
-      size: 4053
+      md5: a080cfe174de643142ee941acdf48741
+      size: 3953
     - path: src/models/train.py
       hash: md5
-      md5: 7eb081ce3d366834086d08f49287c369
-      size: 8234
+      md5: 27c6e801e85fae051041d6b4f77e8aac
+      size: 8116
     params:
       params.yaml:
         stations:
         - LENDAVA
-        - PTUJ
-        - CELJE
-        - CRNOMELJ
-        - BOVEC
-        - MEZICA
-        - ROGLA
         train.batch_size: 32
         train.columns_to_drop:
         - Location
@@ -217,6 +199,6 @@ stages:
     outs:
     - path: models/
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 831c187e727b660c7be0f90ec2a52326.dir
+      size: 4091811
+      nfiles: 2
