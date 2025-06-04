@@ -250,7 +250,7 @@ def train_model_on_temperature_data():
     mlflow.set_experiment("Temperature Forecasting LSTM")
 
     for station in stations:
-
+        # start MLflow run for each weather station
         with mlflow.start_run(run_name=f"train_{station}"):
             mlflow.log_param("station", station)
             mlflow.log_param("target_column", target_column)
@@ -264,27 +264,26 @@ def train_model_on_temperature_data():
             mlflow.log_param("patience", patience)
             mlflow.log_param("epochs", epochs)
 
+            df = load_data(station, output_file_path_template)
+            train_loader, val_loader, test_loader, X, y, X_test, temp_scaler = preprocess_data(df, columns_to_drop, temp_scaler_name, other_scaler_name, lookback, forecast_horizon, batch_size, target_column, test_size, val_size)
+            
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+            model_name = model_name_template.format(station=station, timestamp=timestamp)
+            model_path = model_path_template.format(station=station)
+            model_full_path = os.path.join(model_path, model_name)
 
-        df = load_data(station, output_file_path_template)
-        train_loader, val_loader, test_loader, X, y, X_test, temp_scaler = preprocess_data(df, columns_to_drop, temp_scaler_name, other_scaler_name, lookback, forecast_horizon, batch_size, target_column, test_size, val_size)
-        
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-        model_name = model_name_template.format(station=station, timestamp=timestamp)
-        model_path = model_path_template.format(station=station)
-        model_full_path = os.path.join(model_path, model_name)
+            plot_name = plot_name_template.format(station=station, timestamp=timestamp)
+            plot_full_path = os.path.join(model_path, plot_name)
 
-        plot_name = plot_name_template.format(station=station, timestamp=timestamp)
-        plot_full_path = os.path.join(model_path, plot_name)
+            print(f"\nTraining model for station: {station}\n")
+            model = train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path)
 
-        print(f"\nTraining model for station: {station}\n")
-        model = train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path)
+            print(f"\nEvaluating model for station: {station}\n")
+            predictions, actuals = evaluate_model(X, test_loader, model_full_path)
+            print_results(predictions, actuals, temp_scaler, df, lookback, X_test, station, plot_full_path)
 
-        print(f"\nEvaluating model for station: {station}\n")
-        predictions, actuals = evaluate_model(X, test_loader, model_full_path)
-        print_results(predictions, actuals, temp_scaler, df, lookback, X_test, station, plot_full_path)
-
-        print(f"\nEvaluating model for full dataset for station: {station}\n")
-        # predictions_full, actuals_full = evaluate_full_dataset(model, X, y, batch_size)
+            print(f"\nEvaluating model for full dataset for station: {station}\n")
+            # predictions_full, actuals_full = evaluate_full_dataset(model, X, y, batch_size)
 
 
 
