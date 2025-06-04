@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset
 import torch.nn.functional as F
+import copy
 
 
 class TimeSeriesDataset(Dataset):
@@ -92,15 +93,18 @@ class EarlyStopping:
         self.best_loss = None
         self.counter = 0
         self.early_stop = False
+        self.best_state_dict = None
 
-    def step(self, val_loss):
+    def step(self, val_loss, model):
         if self.best_loss is None:
             self.best_loss = val_loss
+            self.best_state_dict = copy.deepcopy(model.state_dict())
             return False
 
         elif val_loss < self.best_loss - self.min_delta:
             self.best_loss = val_loss
             self.counter = 0
+            self.best_state_dict = copy.deepcopy(model.state_dict())
             return False
 
         else:
@@ -109,3 +113,7 @@ class EarlyStopping:
                 self.early_stop = True
                 return True
             return False
+    
+    def restore_best_weights(self, model):
+        if self.best_state_dict is not None:
+            model.load_state_dict(self.best_state_dict)

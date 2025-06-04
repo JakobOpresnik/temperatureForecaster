@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
+    env:
+      MLFLOW_TRACKING_USERNAME: JakobOpresnik
+      MLFLOW_TRACKING_PASSWORD: ${{ secrets.PAT_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

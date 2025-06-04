@@ -83,7 +83,7 @@ def preprocess_data(df, columns_to_drop, temp_scaler_name, other_scaler_name, lo
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    return train_loader, val_loader, test_loader, X, X_test, temp_scaler
+    return train_loader, val_loader, test_loader, X, y, X_test, temp_scaler
 
 
 def create_sequences(data, target_col="Temperature", lookback=12, forecast_horizon=6):
