@@ -18,7 +18,7 @@ from model import TemperatureForecaster, EarlyStopping
 from preprocess import load_data, preprocess_data
 
 
-def train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path):
+def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path):
     input_size = X.shape[2]  # number of features
     model = TemperatureForecaster(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, dropout=dropout)
 
@@ -78,6 +78,16 @@ def train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, l
 
     # log model path
     mlflow.log_artifact(model_full_path)
+
+    # also log structured MLflow model
+    # mlflow.pytorch.log_model(model, artifact_path="model")
+
+    # log and register model to MLflow
+    mlflow.pytorch.log_model(
+        model,
+        artifact_path="model",
+        registered_model_name=f"TemperatureForecaster-{station}"
+    )
 
     return model
 
@@ -276,7 +286,7 @@ def train_model_on_temperature_data():
             plot_full_path = os.path.join(model_path, plot_name)
 
             print(f"\nTraining model for station: {station}\n")
-            model = train_model(X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path)
+            model = train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path)
 
             print(f"\nEvaluating model for station: {station}\n")
             predictions, actuals = evaluate_model(X, test_loader, model_full_path)
