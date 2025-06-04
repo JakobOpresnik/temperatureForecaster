@@ -21,16 +21,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: 6ea5e3f117206eb973ae8575eae3db8c.dir
-      size: 5586929
+      md5: 59b8a2e62e351b7979d50809d11b6882.dir
+      size: 5578498
       nfiles: 5
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: 6ea5e3f117206eb973ae8575eae3db8c.dir
-      size: 5586929
+      md5: 59b8a2e62e351b7979d50809d11b6882.dir
+      size: 5578498
       nfiles: 5
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -73,16 +73,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 61e80dd812d382949f39a3bf0bb03bee.dir
-      size: 2864559
+      md5: f14a2cbb5082b0e37656d667370e5cec.dir
+      size: 2866286
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 61e80dd812d382949f39a3bf0bb03bee.dir
-      size: 2864559
+      md5: f14a2cbb5082b0e37656d667370e5cec.dir
+      size: 2866286
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -99,9 +99,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 96c235856417b7c762c10cae051b9c2a.dir
-      size: 34871347
-      nfiles: 570
+      md5: 09065d473d86c96a70ea75ee44cdc81d.dir
+      size: 35885227
+      nfiles: 586
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -115,8 +115,8 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 61e80dd812d382949f39a3bf0bb03bee.dir
-      size: 2864559
+      md5: f14a2cbb5082b0e37656d667370e5cec.dir
+      size: 2866286
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
@@ -141,16 +141,16 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: b0329c8d1b7d7a4d2e664331ba782d02.dir
-      size: 863739151
-      nfiles: 157
+      md5: 568a2945e55cb57fd8046ad1feb3a895.dir
+      size: 888310661
+      nfiles: 162
   train_model:
     cmd: poetry run python src/models/train.py
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 61e80dd812d382949f39a3bf0bb03bee.dir
-      size: 2864559
+      md5: f14a2cbb5082b0e37656d667370e5cec.dir
+      size: 2866286
       nfiles: 7
     - path: data/reference/temp/
       hash: md5
@@ -159,9 +159,9 @@ stages:
       nfiles: 7
     - path: gx/uncommitted
       hash: md5
-      md5: 96c235856417b7c762c10cae051b9c2a.dir
-      size: 34871347
-      nfiles: 570
+      md5: 09065d473d86c96a70ea75ee44cdc81d.dir
+      size: 35885227
+      nfiles: 586
     - path: src/models/model.py
       hash: md5
       md5: 20f2cf100278c5a57e08b51592c93d5e
@@ -172,8 +172,8 @@ stages:
       size: 3956
     - path: src/models/train.py
       hash: md5
-      md5: f1fbdd4d7e7e9d598ab96cd4e24c7cbc
-      size: 10952
+      md5: 4de3b7f6dc37a0617ef8007612d55b49
+      size: 11258
     params:
       params.yaml:
         stations:
@@ -215,6 +215,6 @@ stages:
     outs:
     - path: models/
       hash: md5
-      md5: 4f1f3d2328f49d43ec2543993a4ad23b.dir
-      size: 65500725
-      nfiles: 32
+      md5: 53c2282a9e3e97870fbba38f7d6bda8b.dir
+      size: 85957942
+      nfiles: 42
