@@ -90,6 +90,8 @@ stages:
       - train.patience
       - train.min_delta
       - train.epochs
+      - train.mlflow_uri
+      - train.mlflow_experiment_name
       - stations
     outs:
       - models/:

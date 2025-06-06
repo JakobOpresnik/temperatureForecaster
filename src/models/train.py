@@ -18,7 +18,50 @@ from model import TemperatureForecaster, EarlyStopping
 from preprocess import load_data, preprocess_data
 
 
+def save_model(model, model_full_path):
+    # ensure the directory exists
+    os.makedirs(os.path.dirname(model_full_path), exist_ok=True)
+
+    # save trained model
+    torch.save(model.state_dict(), model_full_path)
+    print(f"Trained model saved to {model_full_path}")
+
+
+def register_model(model, model_full_path, station, sequence_length, input_size, device):
+    # log model path
+    mlflow.log_artifact(model_full_path)
+
+    input_example = torch.randn(1, sequence_length, input_size).to(device)
+    registered_model_name = f"TemperatureForecaster-{station}"
+
+    # log and register model to MLflow
+    mlflow.pytorch.log_model(
+        model,
+        artifact_path="model",
+        registered_model_name=registered_model_name,
+        input_example=input_example
+    )
+
+
+def calculate_eval_metrics(actuals, predictions):
+    # calculate evaluation metrics
+    mse = mean_squared_error(actuals, predictions)
+    mae = mean_absolute_error(actuals, predictions)
+    rmse = np.sqrt(mse)
+
+    print(f"\nEvaluation Results:")
+    print(f"\tMSE:  {mse:.4f}")
+    print(f"\tMAE:  {mae:.4f}")
+    print(f"\tRMSE: {rmse:.4f}\n")
+
+    # log evaluation metrics using MLflow
+    mlflow.log_metric("test_mae", mae)
+    mlflow.log_metric("test_mse", mse)
+    mlflow.log_metric("test_rmse", rmse)
+
+
 def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path):
+    sequence_length = X.shape[1]
     input_size = X.shape[2]  # number of features
     model = TemperatureForecaster(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, dropout=dropout)
 
@@ -69,25 +112,9 @@ def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, d
     # restore best model weights
     early_stopping.restore_best_weights(model)
 
-    # ensure the directory exists
-    os.makedirs(os.path.dirname(model_full_path), exist_ok=True)
-
-    # save trained model
-    torch.save(model.state_dict(), model_full_path)
-    print(f"Trained model saved to {model_full_path}")
-
-    # log model path
-    mlflow.log_artifact(model_full_path)
-
-    # also log structured MLflow model
-    # mlflow.pytorch.log_model(model, artifact_path="model")
-
-    # log and register model to MLflow
-    mlflow.pytorch.log_model(
-        model,
-        artifact_path="model",
-        registered_model_name=f"TemperatureForecaster-{station}"
-    )
+    # save and register trained model
+    save_model(model, model_full_path)
+    register_model(model, model_full_path, station, sequence_length, input_size, device)
 
     return model
 
@@ -154,20 +181,7 @@ def evaluate_model(X, test_loader, model_full_path):
     predictions = np.concatenate(predictions)
     actuals = np.concatenate(actuals)
 
-    # calculate evaluation metrics
-    mse = mean_squared_error(actuals, predictions)
-    mae = mean_absolute_error(actuals, predictions)
-    rmse = np.sqrt(mse)
-
-    print(f"\nEvaluation Results:")
-    print(f"\tMSE:  {mse:.4f}")
-    print(f"\tMAE:  {mae:.4f}")
-    print(f"\tRMSE: {rmse:.4f}\n")
-
-    # log evaluation metrics using MLflow
-    mlflow.log_metric("test_mae", mae)
-    mlflow.log_metric("test_mse", mse)
-    mlflow.log_metric("test_rmse", rmse)
+    calculate_eval_metrics(actuals, predictions)
 
     return predictions, actuals
 
@@ -256,12 +270,17 @@ def train_model_on_temperature_data():
     min_delta = params_train["min_delta"]
     epochs = params_train["epochs"]
 
-    mlflow.set_tracking_uri(uri="https://dagshub.com/JakobOpresnik/temperatureForecaster.mlflow/")
-    mlflow.set_experiment("Temperature Forecasting LSTM")
+    mlflow_uri = params_train["mlflow_uri"]
+    mlflow_experiment_name = params_train["mlflow_experiment_name"]
+    mlflow_experiment_run_name_template = params_train["mlflow_experiment_run_name"]
+
+    mlflow.set_tracking_uri(uri=mlflow_uri)
+    mlflow.set_experiment(experiment_name=mlflow_experiment_name)
 
     for station in stations:
         # start MLflow run for each weather station
-        with mlflow.start_run(run_name=f"train_{station}"):
+        mlflow_experiment_run_name = mlflow_experiment_run_name_template.format(station=station)
+        with mlflow.start_run(run_name=mlflow_experiment_run_name):
             mlflow.log_param("station", station)
             mlflow.log_param("target_column", target_column)
             mlflow.log_param("test_size", test_size)
