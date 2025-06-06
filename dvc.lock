@@ -21,16 +21,16 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: d6bb2f0c15b3a60fd1513e3f102de12d.dir
-      size: 5593243
+      md5: 588012653dfbca1c694759cf27939893.dir
+      size: 5570817
       nfiles: 5
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: d6bb2f0c15b3a60fd1513e3f102de12d.dir
-      size: 5593243
+      md5: 588012653dfbca1c694759cf27939893.dir
+      size: 5570817
       nfiles: 5
     - path: src/data/preprocess_temp_data.py
       hash: md5
@@ -73,16 +73,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 4d6d0b551d1a2ec83129cf150b00ed13.dir
-      size: 2878372
+      md5: 159a93b3b02e3b5e4ae84b9512856835.dir
+      size: 2948359
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 4d6d0b551d1a2ec83129cf150b00ed13.dir
-      size: 2878372
+      md5: 159a93b3b02e3b5e4ae84b9512856835.dir
+      size: 2948359
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -99,9 +99,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 1c865fb95900030c4d2d918a96c547a6.dir
-      size: 36899051
-      nfiles: 602
+      md5: 92edf9cc8f4219c3559c6c338cebc570.dir
+      size: 37912818
+      nfiles: 618
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -115,8 +115,8 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 4d6d0b551d1a2ec83129cf150b00ed13.dir
-      size: 2878372
+      md5: 159a93b3b02e3b5e4ae84b9512856835.dir
+      size: 2948359
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
@@ -141,16 +141,16 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 7ebde0b466de668907b86c6137e0d2ab.dir
-      size: 912893395
-      nfiles: 167
+      md5: 11e7e1fc5d423d9b21a41760443fb87c.dir
+      size: 937509823
+      nfiles: 172
   train_model:
     cmd: poetry run python src/models/train.py
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 4d6d0b551d1a2ec83129cf150b00ed13.dir
-      size: 2878372
+      md5: 159a93b3b02e3b5e4ae84b9512856835.dir
+      size: 2948359
       nfiles: 7
     - path: data/reference/temp/
       hash: md5
@@ -159,9 +159,9 @@ stages:
       nfiles: 7
     - path: gx/uncommitted
       hash: md5
-      md5: 1c865fb95900030c4d2d918a96c547a6.dir
-      size: 36899051
-      nfiles: 602
+      md5: 92edf9cc8f4219c3559c6c338cebc570.dir
+      size: 37912818
+      nfiles: 618
     - path: src/models/model.py
       hash: md5
       md5: 20f2cf100278c5a57e08b51592c93d5e
@@ -172,8 +172,8 @@ stages:
       size: 3956
     - path: src/models/train.py
       hash: md5
-      md5: 4de3b7f6dc37a0617ef8007612d55b49
-      size: 11258
+      md5: 26fffcbadc3857d52ad78b79451e568d
+      size: 12515
     params:
       params.yaml:
         stations:
@@ -202,6 +202,10 @@ stages:
         train.learning_rate: 0.0097
         train.lookback: 240
         train.min_delta: 0.001
+        train.mlflow_experiment_name: Temperature Forecasting LSTM
+        train.mlflow_experiment_run_name: train_{station}
+        train.mlflow_registered_model_name: TemperatureForecaster-{station}
+        train.mlflow_uri: https://dagshub.com/JakobOpresnik/temperatureForecaster.mlflow/
         train.model_name_template: temperature_forecaster_{station}_{timestamp}.pt
         train.model_path_template: models/{station}/
         train.num_layers: 3
@@ -215,6 +219,6 @@ stages:
     outs:
     - path: models/
       hash: md5
-      md5: 7d1d95ad573354b8e234306eda1233d6.dir
-      size: 106440904
-      nfiles: 52
+      md5: 9fb13450ed77c49f3c857dcfc7bf84c2.dir
+      size: 126997628
+      nfiles: 62
