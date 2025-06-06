@@ -92,6 +92,8 @@ stages:
       - train.epochs
       - train.mlflow_uri
       - train.mlflow_experiment_name
+      - train.mlflow_experiment_run_name
+      - train.mlflow_registered_model_name
       - stations
     outs:
       - models/:
