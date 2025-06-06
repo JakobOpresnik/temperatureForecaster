@@ -1,5 +1,4 @@
 import os
-import mlflow.pytorch
 import yaml
 from datetime import datetime
 import pandas as pd
@@ -10,6 +9,7 @@ matplotlib.use("Agg")  # use non-GUI backend suitable for saving figures
 
 import mlflow
 import mlflow.pytorch
+from mlflow.models.signature import infer_signature
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
@@ -27,19 +27,22 @@ def save_model(model, model_full_path):
     print(f"Trained model saved to {model_full_path}")
 
 
-def register_model(model, model_full_path, station, sequence_length, input_size, device):
+def register_model(model, model_full_path, mlflow_registered_model_name_template, station, sequence_length, input_size, outputs, device):
     # log model path
     mlflow.log_artifact(model_full_path)
 
-    input_example = torch.randn(1, sequence_length, input_size).to(device)
-    registered_model_name = f"TemperatureForecaster-{station}"
+    input_example = torch.randn(1, sequence_length, input_size).to(device).cpu().numpy()
+    output_example = outputs.cpu().numpy()
+    registered_model_name = mlflow_registered_model_name_template.format(station=station)
+    model_signature = infer_signature(model_input=input_example, model_output=output_example)
 
     # log and register model to MLflow
     mlflow.pytorch.log_model(
         model,
         artifact_path="model",
         registered_model_name=registered_model_name,
-        input_example=input_example
+        input_example=input_example,
+        signature=model_signature
     )
 
 
@@ -60,7 +63,7 @@ def calculate_eval_metrics(actuals, predictions):
     mlflow.log_metric("test_rmse", rmse)
 
 
-def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path):
+def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path, mlflow_registered_model_name_template):
     sequence_length = X.shape[1]
     input_size = X.shape[2]  # number of features
     model = TemperatureForecaster(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, dropout=dropout)
@@ -114,7 +117,7 @@ def train_model(station, X, train_loader, val_loader, hidden_size, num_layers, d
 
     # save and register trained model
     save_model(model, model_full_path)
-    register_model(model, model_full_path, station, sequence_length, input_size, device)
+    register_model(model, model_full_path, mlflow_registered_model_name_template, station, sequence_length, input_size, outputs, device)
 
     return model
 
@@ -273,6 +276,7 @@ def train_model_on_temperature_data():
     mlflow_uri = params_train["mlflow_uri"]
     mlflow_experiment_name = params_train["mlflow_experiment_name"]
     mlflow_experiment_run_name_template = params_train["mlflow_experiment_run_name"]
+    mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
 
     mlflow.set_tracking_uri(uri=mlflow_uri)
     mlflow.set_experiment(experiment_name=mlflow_experiment_name)
@@ -305,7 +309,7 @@ def train_model_on_temperature_data():
             plot_full_path = os.path.join(model_path, plot_name)
 
             print(f"\nTraining model for station: {station}\n")
-            model = train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path)
+            model = train_model(station, X, train_loader, val_loader, hidden_size, num_layers, dropout, lr, patience, min_delta, epochs, model_full_path, mlflow_registered_model_name_template)
 
             print(f"\nEvaluating model for station: {station}\n")
             predictions, actuals = evaluate_model(X, test_loader, model_full_path)
