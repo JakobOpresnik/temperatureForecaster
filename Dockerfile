@@ -1,26 +1,26 @@
 FROM python:3.11-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install system packages in one layer (clean cache to reduce size)
-RUN apt-get update && apt-get install -y \
-    curl build-essential git && \
-    rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:$PATH"
 
-# Copy only dependency files first (for better cache)
-COPY pyproject.toml poetry.lock* ./
+WORKDIR /app
 
-# Install dependencies without dev packages
+# Copy dependency files early to cache
+COPY pyproject.toml poetry.lock* /app/
+
+# Install only main dependencies (not dev or the root package)
 RUN poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi
 
-# Now copy the rest of the code
-COPY . .
+# Copy the rest of your application
+COPY . /app
 
-# Default command
-CMD ["python", "serve.py"]
+# Expose port used by Uvicorn
+EXPOSE 8000
+
+# Run FastAPI with Uvicorn
+CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8000"]

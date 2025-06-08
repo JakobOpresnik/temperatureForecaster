@@ -6,6 +6,7 @@ poetry.lock
 data/
 models/
 .dvc/
+.dvc/cache
 *.csv
 *.json
 .env
