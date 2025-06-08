@@ -2,7 +2,6 @@ __pycache__
 *.pyc
 *.pyo
 *.pyd
-poetry.lock
 data/
 models/
 .dvc/
