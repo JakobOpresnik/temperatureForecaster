@@ -9,15 +9,15 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Copy dependency files early to cache
+# Copy dependency files early to cache layer
 COPY pyproject.toml poetry.lock* /app/
 
-# Install only main dependencies (not dev or the root package)
+# Install only main dependencies (no dev, no root package)
 RUN poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi
 
-# Copy the rest of your application
-COPY . /app
+# Copy application files needed at runtime
+COPY serve.py params.yaml /app/
 
 # Expose port used by Uvicorn
 EXPOSE 8000
