@@ -35,5 +35,6 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
+          railway login
           railway link --project d98ec47d-3883-4ba2-be46-d6c9935c2772 --service temperatureForecaster
           railway up --no-build
