@@ -33,6 +33,4 @@ jobs:
       - name: Deploy via Railway CLI
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          railway link --project a38b37a0-0902-4609-ab14-34f071e580de --service temperatureForecaster
-          railway up --no-build --image ${{ secrets.DOCKER_USERNAME }}/temperature-forecaster:latest
+        run: railway up --no-build --image ${{ secrets.DOCKER_USERNAME }}/temperature-forecaster:latest

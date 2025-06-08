@@ -1,5 +1,5 @@
 [project]
-id = "d98ec47d-3883-4ba2-be46-d6c9935c2772"
+id = "a38b37a0-0902-4609-ab14-34f071e580de"
 
 [deploy]
 service = "temperatureForecaster"
