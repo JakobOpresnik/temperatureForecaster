@@ -17,7 +17,7 @@ RUN poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi
 
 # Copy application files needed at runtime
-COPY serve.py params.yaml /app/
+COPY src/serve.py params.yaml /app/
 
 # Expose port used by Uvicorn
 EXPOSE 8000

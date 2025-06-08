@@ -5,8 +5,8 @@ import logging
 
 app = FastAPI()
 
-stations = yaml.safe_load(open("params.yaml"))["stations"]
-params_train = yaml.safe_load(open("params.yaml"))["train"]
+stations = yaml.safe_load(open("../../params.yaml"))["stations"]
+params_train = yaml.safe_load(open("../../params.yaml"))["train"]
 
 mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
 MODELS = {}
