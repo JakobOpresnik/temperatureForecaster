@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import mlflow.pyfunc
 import yaml
+import logging
 
 app = FastAPI()
 
@@ -8,13 +9,12 @@ stations = yaml.safe_load(open("params.yaml"))["stations"]
 params_train = yaml.safe_load(open("params.yaml"))["train"]
 
 mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
-
-# Load models from MLflow by their registered name
-# STATION_NAMES = ["CELJE", "LJUBLJANA", "MARIBOR", "LENDAVA", "PORTOROZ"]
 MODELS = {}
 
 @app.on_event("startup")
 def load_models():
+    logging.basicConfig(level=logging.INFO)
+    logging.info("🚀 FastAPI app has started successfully.")
     for station in stations:
         mlflow_registered_model_name = mlflow_registered_model_name_template.format(station=station)
         model_uri = f"models:/{mlflow_registered_model_name}/Production"

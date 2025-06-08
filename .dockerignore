@@ -5,3 +5,7 @@ __pycache__
 poetry.lock
 data/
 models/
+.dvc/
+*.csv
+*.json
+.env
