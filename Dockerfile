@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install poetry==1.3.1
 
 # Copy only if both files exist
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml ./
 
 # Install project dependencies
 RUN poetry config virtualenvs.create false && poetry install --no-dev --no-interaction --no-ansi
