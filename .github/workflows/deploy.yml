@@ -27,6 +27,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/temperature-forecaster:latest
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy via Railway CLI
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
