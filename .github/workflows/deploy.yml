@@ -26,3 +26,11 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/temperature-forecaster:latest
+
+      - name: Deploy via Railway CLI
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway status
+          railway link --project a38b37a0-0902-4609-ab14-34f071e580de --service temperature-forecaster
+          railway up
