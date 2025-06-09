@@ -3,7 +3,7 @@ FROM python:3.11-slim AS builder
 
 RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://install.python-poetry.org | python3 - && \
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.1.3 python3 - && \
     ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
 WORKDIR /app
