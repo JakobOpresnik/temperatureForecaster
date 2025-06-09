@@ -5,10 +5,10 @@ WORKDIR /app
 
 # Install Poetry
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.1.3 python3 -
 ENV PATH="/root/.local/bin:$PATH"
 
-# Copy project files
+# Copy pyproject and lockfile
 COPY pyproject.toml poetry.lock* /app/
 
 # Export only runtime dependencies to requirements.txt
@@ -19,11 +19,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install runtime deps
+# Install runtime dependencies
 COPY --from=builder /app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy only needed application code
 COPY src/serve.py /app/src/
 COPY params.yaml /app/
 
