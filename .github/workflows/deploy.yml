@@ -35,3 +35,4 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           railway link --project a38b37a0-0902-4609-ab14-34f071e580de --service temperature-forecaster
+          railway redeploy
