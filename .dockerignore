@@ -13,3 +13,6 @@ notebooks/
 .env
 .venv
 .git/
+.root/
+.cache/
+.mlflow/

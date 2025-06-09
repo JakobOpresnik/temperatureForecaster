@@ -1,27 +1,36 @@
-# Use Python 3.11 base image
-FROM python:3.11-slim
+# ---------- Stage 1: Builder ----------
+FROM python:3.11-slim AS builder
 
-# Set the working directory
 WORKDIR /app
 
-# Copy lock and project file first to leverage Docker cache
-COPY poetry.lock pyproject.toml /app/
+# Install Poetry
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.1.3 python3 -
+ENV PATH="/root/.local/bin:$PATH"
 
-# Install Poetry (v2.1.3 like yours)
-RUN pip install poetry==2.1.3
+# Copy pyproject and lockfile
+COPY pyproject.toml poetry.lock* /app/
 
-# Disable virtualenv creation and install dependencies
-RUN poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
+# Export only runtime dependencies to requirements.txt
+RUN poetry export --only main --without-hashes -f requirements.txt -o requirements.txt
 
-# Copy only what’s needed for running the app
+# ---------- Stage 2: Runtime ----------
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install runtime dependencies
+COPY --from=builder /app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only needed application code
 COPY src/serve.py /app/src/
 COPY params.yaml /app/
 
-# Expose port 8000 (Uvicorn/FastAPI default)
-EXPOSE 8000
+# Clean MLflow and other caches that might cause image bloat
+RUN rm -rf /root/.cache /root/.mlflow /root/.cache/torch /root/.cache/huggingface
 
-# Set working directory to app source
+EXPOSE 8000
 WORKDIR /app/src
 
-# Run Uvicorn
 CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8000"]
