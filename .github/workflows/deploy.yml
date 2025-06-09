@@ -20,20 +20,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/temperature-forecaster:latest
-
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy via Railway CLI
+      - name: Deploy to Railway
+        run: railway up --service temperature-forecaster
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          railway status
-          railway link --project a38b37a0-0902-4609-ab14-34f071e580de --service temperature-forecaster
-          railway up
