@@ -4,8 +4,12 @@ __pycache__
 *.pyd
 data/
 models/
+gx/
+notebooks/
 .dvc/
 .dvc/cache
 *.csv
 *.json
 .env
+.venv
+.git/

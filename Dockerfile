@@ -1,27 +1,37 @@
-FROM python:3.11-slim
+# ---------- Stage 1: Builder ----------
+FROM python:3.11-slim AS builder
 
-# Install system dependencies
+# Install system deps
 RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
-ENV PATH="/root/.local/bin:$PATH"
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
 WORKDIR /app
 
-# Copy dependency files early to cache layer
+# Copy and install dependencies
 COPY pyproject.toml poetry.lock* /app/
-
-# Install only main dependencies (no dev, no root package)
 RUN poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi
 
-# Copy application files needed at runtime
+# ---------- Stage 2: Runtime ----------
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy only installed packages and app files
+COPY --from=builder /usr/local/lib/python3.11 /usr/local/lib/python3.11
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /app /app
+
+# Copy app source
 COPY src/serve.py /app/src/
 COPY params.yaml /app/
 
-# Expose port used by Uvicorn
+# Clean up (optional but safe)
+RUN apt-get purge -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
+
 EXPOSE 8000
 
-# Run FastAPI with Uvicorn
 CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8000"]
