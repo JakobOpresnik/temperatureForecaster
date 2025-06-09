@@ -23,6 +23,11 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      - name: Print Railway token prefix (safe debug)
+        run: echo "RAILWAY_TOKEN prefix is ${RAILWAY_TOKEN:0:8}..."
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: Deploy via Railway CLI
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
