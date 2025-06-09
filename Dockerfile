@@ -34,7 +34,7 @@ FROM python:3.11-slim-bullseye
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi7 \
-    libssl3 \
+    libssl1.1 \
     libxml2 \
     libxslt1.1 \
     zlib1g \
@@ -57,3 +57,4 @@ EXPOSE 8000
 WORKDIR /app/src
 
 CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8000"]
+
