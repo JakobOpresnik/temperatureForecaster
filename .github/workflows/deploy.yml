@@ -24,6 +24,8 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        run: railway up --service temperature-forecaster
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway status
+          railway up --service ${{ secrets.RAILWAY_SERVICE_NAME }}
