@@ -54,6 +54,7 @@ def list_models():
         for name in model_names:
             try:
                 latest_versions = mlflow_client.get_latest_versions(name)
+                print(latest_versions)
                 model_infos.append({
                     "name": name,
                     "latest_versions": [
