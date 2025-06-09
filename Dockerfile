@@ -1,8 +1,20 @@
 # ---------- Stage 1: Builder ----------
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim-bullseye AS builder
 
-# Install system deps needed for build & Poetry
-RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
+# Install system dependencies for building and running your Python libs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    libffi-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    zlib1g-dev \
+    libblas-dev \
+    liblapack-dev \
+    gfortran \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
@@ -10,29 +22,35 @@ RUN curl -sSL https://install.python-poetry.org | python3 - && \
 
 WORKDIR /app
 
-# Copy dependency files
 COPY pyproject.toml poetry.lock* /app/
 
-# Install dependencies without creating virtualenv (install in global env)
+# Install only main dependencies, no dev
 RUN poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi && \
-    rm -rf /root/.cache /root/.mlflow /root/.cache/torch /root/.cache/huggingface
+    rm -rf /root/.cache
 
 # ---------- Stage 2: Runtime ----------
-FROM python:3.11-slim
+FROM python:3.11-slim-bullseye
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libffi7 \
+    libssl3 \
+    libxml2 \
+    libxslt1.1 \
+    zlib1g \
+    libblas3 \
+    liblapack3 \
+    gfortran \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy only installed Python packages (site-packages) and binaries from builder
+# Copy installed packages from builder
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy your app source and config
 COPY src/serve.py /app/src/
 COPY params.yaml /app/
-
-# Clean up package manager caches (safe to do in slim)
-RUN apt-get purge -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 EXPOSE 8000
 
