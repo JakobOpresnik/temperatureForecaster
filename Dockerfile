@@ -3,9 +3,9 @@ FROM python:3.11-slim as builder
 
 WORKDIR /app
 
-# Install build tools + Poetry
+# Install build tools + latest Poetry (>=1.2.0 for `poetry export`)
 RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.1.3 python3 -
 ENV PATH="/root/.local/bin:$PATH"
 
 # Copy pyproject + lock and generate requirements.txt
