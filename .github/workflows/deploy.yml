@@ -26,4 +26,6 @@ jobs:
       - name: Deploy via Railway CLI
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway redeploy
+        run: |
+          railway link --service temperature-forecaster
+          railway redeploy
