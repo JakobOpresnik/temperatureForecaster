@@ -20,11 +20,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy only installed packages and app source files
+# Copy only installed packages and app files
 COPY --from=builder /usr/local/lib/python3.11 /usr/local/lib/python3.11
 COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /app/src /app/src
-COPY --from=builder /app/params.yaml /app/
+COPY src/serve.py /app/src/
+COPY params.yaml /app/
 
 # Clean up (optional but safe)
 RUN apt-get purge -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
