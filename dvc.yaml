@@ -68,8 +68,6 @@ stages:
       - src/models/preprocess.py
       - src/models/train.py
       - data/preprocessed/temp/
-      - data/reference/temp/
-      - gx/uncommitted
     params:
       - train.target_column
       - train.columns_to_drop
