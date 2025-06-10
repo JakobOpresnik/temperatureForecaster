@@ -41,5 +41,36 @@ jobs:
         run: |
           poetry install --no-interaction --no-root
 
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '3.59.1'
+
+      - name: Configure DVC Remote
+        run: |
+          dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
+          dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
+
+      - name: Pull latest code and data
+        run: |
+          git pull origin main || echo "Nothing to pull"
+          dvc pull || echo "No remote data to pull"
+
+      - name: Run DVC pipeline and push results
+        run: |
+          dvc pull
+          dvc status
+          dvc repro --skip-exec train_model
+          dvc commit
+          dvc push
+          git add dvc.lock
+          git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
+
       - name: Run data ingestion script
         run: poetry run python src/data/save_to_supabase.py

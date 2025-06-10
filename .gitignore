@@ -1,6 +1,5 @@
 # Ignore everything inside /data
-/data/raw/
-/data/reference/
+/data/*
 
 # But do NOT ignore DVC metadata files
 !data/**/*.dvc
