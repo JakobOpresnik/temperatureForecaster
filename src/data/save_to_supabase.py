@@ -49,14 +49,14 @@ def save_data_to_supabase(file_path: str):
         # 2. Convert DataFrame to a list of dictionaries for Supabase insertion.
         #    IMPORTANT: Ensure your CSV column names exactly match your Supabase table column names
         #    (including case sensitivity).
-        data_to_insert = df.to_dict(orient='records')
+        #data_to_insert = df.to_dict(orient='records')
 
-        if not data_to_insert:
+        if not df:
             print("No valid data rows to insert from CSV after conversion.")
             return
 
         # 3. Save data to Supabase using upsert with duplicate skipping
-        print(f"Attempting to insert {len(data_to_insert)} records into Supabase table '{SUPABASE_TABLE_NAME}'...")
+        print(f"Attempting to insert {len(df)} records into Supabase table '{SUPABASE_TABLE_NAME}'...")
 
         # IMPORTANT: 'on_conflict' must match the column(s) with your UNIQUE constraint
         # in the Supabase 'weather' table. This is crucial for duplicate skipping.
@@ -65,7 +65,7 @@ def save_data_to_supabase(file_path: str):
         on_conflict_cols = "Date,Location" # <--- VERIFY THIS MATCHES YOUR SUPABASE UNIQUE CONSTRAINT COLUMN NAME
 
         response = supabase.table(SUPABASE_TABLE_NAME).upsert(
-            data_to_insert,
+            df,
             on_conflict=on_conflict_cols,
             ignore_duplicates=True
         ).execute()
