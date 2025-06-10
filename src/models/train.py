@@ -14,8 +14,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from model import TemperatureForecaster, EarlyStopping
-from preprocess import load_data, preprocess_data
+from api.model import TemperatureForecaster, EarlyStopping
+from api.preprocess import load_data, preprocess_data
 
 
 def save_model(model, model_full_path):
