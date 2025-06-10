@@ -10,7 +10,6 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 SUPABASE_TABLE_NAME = os.environ.get("SUPABASE_TABLE_NAME", "weather") # default to 'weather'
 
-
 if not SUPABASE_URL or not SUPABASE_KEY:
     print("Error: Supabase URL or Key not found in environment variables.", file=sys.stderr)
     print("Please ensure SUPABASE_URL and SUPABASE_KEY are set as GitHub Secrets.", file=sys.stderr)
@@ -25,15 +24,6 @@ except Exception as e:
 
 
 def save_data_to_supabase():
-    """
-    Reads data directly from a CSV file and inserts/upserts it into the
-    Supabase 'weather' table, skipping rows that are duplicates based on
-    the 'Date' column. No further preprocessing is applied within this function.
-
-    Args:
-        file_path (str): The path to the CSV file to read.
-    """
-
     params = yaml.safe_load(open("params.yaml"))["preprocess"]
     stations = yaml.safe_load(open("params.yaml"))["stations"]
 
