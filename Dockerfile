@@ -33,6 +33,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY src/api/serve.py /app/src/
 COPY src/api/connect_supabase.py /app/src/
 COPY params.yaml /app/
+COPY .env /app/
 
 # Final cleanup
 RUN apt-get purge -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
