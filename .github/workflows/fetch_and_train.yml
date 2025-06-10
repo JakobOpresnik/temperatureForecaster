@@ -1,9 +1,9 @@
 name: Fetch data on schedule
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # allows manual triggering from the GitHub UI
   schedule:
-    - cron: '0 0 * * *' # every day at midnight UTC
+    - cron: '0 */3 * * *' # run every 3h
 
 jobs:
   fetch_temp:
@@ -72,3 +72,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Run data ingestion script
+        run: poetry run python src/data/save_to_supabase.py
