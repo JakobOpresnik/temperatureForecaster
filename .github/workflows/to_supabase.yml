@@ -21,19 +21,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
 
       # (Optional, if you need the Supabase CLI for other tasks)
       # - name: Setup Supabase CLI
       #   uses: supabase/setup-cli@v1
       #   with:
       #     version: latest
-
-          steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          fetch-depth: 0
 
       - name: Setup Git
         run: |
