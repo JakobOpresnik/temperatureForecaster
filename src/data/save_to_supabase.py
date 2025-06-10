@@ -44,7 +44,7 @@ def save_data_to_supabase(file_path: str):
         # 1. Read data directly from CSV into a DataFrame
         print(f"Reading data from {file_path}...")
         df = pd.read_csv(file_path)
-        print(f"Initial DataFrame head:\n{df.head()}")
+        print(f"Initial DataFrame head:\n{df.tail(10)}")
 
         # 2. Convert DataFrame to a list of dictionaries for Supabase insertion.
         #    IMPORTANT: Ensure your CSV column names exactly match your Supabase table column names
@@ -62,7 +62,7 @@ def save_data_to_supabase(file_path: str):
         # in the Supabase 'weather' table. This is crucial for duplicate skipping.
         # Assuming 'Date' is the unique key. Adjust if your column name is 'date' (lowercase)
         # or if you have a composite key (e.g., "Date,Location").
-        on_conflict_cols = "Date" # <--- VERIFY THIS MATCHES YOUR SUPABASE UNIQUE CONSTRAINT COLUMN NAME
+        on_conflict_cols = "Date,Location" # <--- VERIFY THIS MATCHES YOUR SUPABASE UNIQUE CONSTRAINT COLUMN NAME
 
         response = supabase.table(SUPABASE_TABLE_NAME).upsert(
             data_to_insert,

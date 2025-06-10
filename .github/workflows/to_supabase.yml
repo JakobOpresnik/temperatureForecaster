@@ -50,16 +50,8 @@ jobs:
         run: |
           poetry install --no-interaction --no-root
 
-      - name: Create dummy CSV for testing (remove this if you have a real CSV in your repo)
-        run: |
-          echo "Date,Location,Temperature" > weather_data.csv
-          echo "2025-06-10 10:00:00,Šentjur,21.5" >> weather_data.csv
-          echo "2025-06-10 11:00:00,Šentjur,22.0" >> weather_data.csv
-          echo "2025-06-10 12:00:00,Celje,20.0" >> weather_data.csv
-          echo "2025-06-10 10:00:00,Šentjur,21.5" >> weather_data.csv
-
       - name: Run data ingestion script
-        run: poetry run python src/data/save_to_supabase.py weather_data.csv
+        run: poetry run python src/data/save_to_supabase.py data/preprocessed/temp/BOVEC.csv
         # Replace 'your_data_ingestion_script.py' with the actual name of your Python file
         # (e.g., ingest_weather_data.py or the file containing save_data_to_supabase)
         # And pass the CSV file path as an argument if your script expects it.
