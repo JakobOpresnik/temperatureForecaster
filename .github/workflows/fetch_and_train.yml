@@ -57,7 +57,7 @@ jobs:
           git pull origin main || echo "Nothing to pull"
           dvc pull || echo "No remote data to pull"
 
-      - name: Fetch Data
+      - name: Run DVC pipeline and push results
         run: |
           dvc pull
           dvc status
