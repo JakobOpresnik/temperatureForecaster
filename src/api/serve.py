@@ -10,9 +10,10 @@ from datetime import datetime
 
 app = FastAPI()
 
-# allow FE to make requests
+# allow FE to make requests (production & local)
 origins = [
     "https://temperatureforecaster-frontend-production.up.railway.app/",
+    "http://localhost:5173/"
 ]
 
 app.add_middleware(
