@@ -4,7 +4,7 @@ import yaml
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from connect_supabase import fetch_weather_data_for_station
+from connect_supabase import fetch_weather_data_for_station, save_data_to_supabase
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 
@@ -52,6 +52,7 @@ def load_models():
 
 @app.get("/")
 def root():
+    save_data_to_supabase("data/preprocessed/temp/BOVEC.csv")
     return list(MODELS.keys())
 
 

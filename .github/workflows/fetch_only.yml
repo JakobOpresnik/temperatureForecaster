@@ -1,0 +1,68 @@
+name: Fetch data on schedule
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # hourly data fetching & preprocessing
+
+jobs:
+  fetch_temp:
+    name: Fetch and preprocess temperature data
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    env:
+      MLFLOW_TRACKING_URI: https://dagshub.com/JakobOpresnik/temperatureForecaster.mlflow/
+      MLFLOW_TRACKING_USERNAME: JakobOpresnik
+      MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.8'
+          cache: poetry
+
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction --no-root
+
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '3.59.1'
+
+      - name: Configure DVC Remote
+        run: |
+          dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
+          dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
+
+      - name: Pull latest code and data
+        run: |
+          git pull origin main || echo "Nothing to pull"
+          dvc pull || echo "No remote data to pull"
+
+      - name: Run DVC pipeline and push results
+        run: |
+          poetry run python src/data/fetch_temp_data.py
+          poetry run python src/data/preprocess_temp_data.py
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
