@@ -64,8 +64,8 @@ stages:
   train_model:
     cmd: poetry run python src/models/train.py
     deps:
-      - src/api/model.py
-      - src/api/preprocess.py
+      - src/models/model.py
+      - src/models/preprocess.py
       - src/models/train.py
       - data/preprocessed/temp/
       - data/reference/temp/

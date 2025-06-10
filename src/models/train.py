@@ -5,6 +5,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+
+from model import EarlyStopping, TemperatureForecaster
+from preprocess import load_data, preprocess_data
 matplotlib.use("Agg")  # use non-GUI backend suitable for saving figures
 
 import mlflow
@@ -14,8 +17,6 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from api.model import TemperatureForecaster, EarlyStopping
-from api.preprocess import load_data, preprocess_data
 
 
 def save_model(model, model_full_path):
@@ -279,11 +280,13 @@ def train_model_on_temperature_data():
     mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
 
     mlflow.set_tracking_uri(uri=mlflow_uri)
+    print("uri: ", mlflow_uri)
     mlflow.set_experiment(experiment_name=mlflow_experiment_name)
 
     for station in stations:
         # start MLflow run for each weather station
         mlflow_experiment_run_name = mlflow_experiment_run_name_template.format(station=station)
+        print("mlflow experiment run name: ", mlflow_experiment_run_name)
         with mlflow.start_run(run_name=mlflow_experiment_run_name):
             mlflow.log_param("station", station)
             mlflow.log_param("target_column", target_column)
