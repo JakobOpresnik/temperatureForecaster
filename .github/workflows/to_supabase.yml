@@ -28,10 +28,27 @@ jobs:
       #   with:
       #     version: latest
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+          steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          python-version: '3.11' # Or your desired Python version
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.8'
+          cache: poetry
 
       - name: Install dependencies
         run: |
