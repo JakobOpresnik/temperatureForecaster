@@ -6,13 +6,9 @@ import yaml
 from supabase import create_client, Client
 
 
-
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 SUPABASE_TABLE_NAME = os.environ.get("SUPABASE_TABLE_NAME", "weather") # default to 'weather'
-
-SUPABASE_URL="https://yscjmekilrlflvefhyog.supabase.co"
-SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzY2ptZWtpbHJsZmx2ZWZoeW9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MDM1OTAsImV4cCI6MjA2NTA3OTU5MH0.kXu0CcfbJbBm93qpArxBYzc9PcQlipPE4nwKIgL301w"
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     print("Error: Supabase URL or Key not found in environment variables.", file=sys.stderr)
