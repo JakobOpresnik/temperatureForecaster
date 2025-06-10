@@ -1,22 +1,19 @@
-name: Auto Insert Data to Supabase
+name: Insert fetched data into Supabase
 
 on:
-  # This example uses a manual trigger, but you could use
-  # push:
-  #   branches: [ main ]
-  # or a schedule:
-  # schedule:
-  #   - cron: '0 * * * *' # Every hour
-  workflow_dispatch: # Allows manual triggering from the GitHub UI
+  workflow_dispatch: # allows manual triggering from the GitHub UI
+  schedule:
+    - cron: '0 * * * *' # run every hour
 
 jobs:
   insert_data:
+    name: Insert data to Supabase
     runs-on: ubuntu-latest
+
     env:
-      # Accessing the GitHub Secrets
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      SUPABASE_TABLE_NAME: 'weather' # This can be hardcoded if fixed, or a secret if it varies
+      SUPABASE_TABLE_NAME: 'weather'
 
     steps:
       - name: Checkout repository
@@ -24,12 +21,6 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
-
-      # (Optional, if you need the Supabase CLI for other tasks)
-      # - name: Setup Supabase CLI
-      #   uses: supabase/setup-cli@v1
-      #   with:
-      #     version: latest
 
       - name: Setup Git
         run: |
@@ -51,9 +42,4 @@ jobs:
           poetry install --no-interaction --no-root
 
       - name: Run data ingestion script
-        run: poetry run python src/data/save_to_supabase.py data/preprocessed/temp/BOVEC.csv
-        # Replace 'your_data_ingestion_script.py' with the actual name of your Python file
-        # (e.g., ingest_weather_data.py or the file containing save_data_to_supabase)
-        # And pass the CSV file path as an argument if your script expects it.
-        # Example if your script doesn't take args:
-        # run: python -c "from your_module import save_data_to_supabase; save_data_to_supabase('weather_data.csv')"
+        run: poetry run python src/data/save_to_supabase.py
