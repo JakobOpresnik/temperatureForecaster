@@ -32,8 +32,8 @@ def load_models():
         print("Models already loaded, skipping.")
         return """
     
-    stations = yaml.safe_load(open("../../params.yaml"))["stations"]
-    params_train = yaml.safe_load(open("../../params.yaml"))["train"]
+    stations = yaml.safe_load(open("../params.yaml"))["stations"]
+    params_train = yaml.safe_load(open("../params.yaml"))["train"]
 
     mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])
     mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
@@ -62,7 +62,7 @@ def root():
 
 @app.get("/predict/{station}")
 def predict(station: str):
-    params_train = yaml.safe_load(open("../../params.yaml"))["train"]
+    params_train = yaml.safe_load(open("../params.yaml"))["train"]
     lookback = params_train["lookback"]
     forecast_horizon = params_train["forecast_horizon"]
     columns_to_drop = params_train["columns_to_drop"]
