@@ -10,15 +10,14 @@ from datetime import datetime
 
 app = FastAPI()
 
-# Add this before any route definitions:
+# allow FE to make requests
 origins = [
-    "http://localhost:5173",
-    # you can add other origins here if needed
+    "https://temperatureforecaster-frontend-production.up.railway.app/",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # or use ["*"] to allow all (not recommended for prod)
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,10 +27,6 @@ MODELS = {}
 
 @app.on_event("startup")
 def load_models():
-    """ if MODELS:  # if MODELS dict is not empty, skip loading
-        print("Models already loaded, skipping.")
-        return """
-    
     stations = yaml.safe_load(open("../params.yaml"))["stations"]
     params_train = yaml.safe_load(open("../params.yaml"))["train"]
 
@@ -56,7 +51,6 @@ def load_models():
 
 @app.get("/")
 def root():
-    # load_models()
     return list(MODELS.keys())
 
 
