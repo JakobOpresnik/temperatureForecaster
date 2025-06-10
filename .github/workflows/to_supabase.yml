@@ -56,11 +56,11 @@ jobs:
           git pull origin main || echo "Nothing to pull"
           dvc pull || echo "No remote data to pull"
 
-      - name: Run DVC pipeline and push results
+      - name: Run DVC pipeline (without train_model) and push results
         run: |
           dvc pull
           dvc status
-          dvc repro --skip-exec train_model
+          dvc repro validation test_data
           dvc commit
           dvc push
           git add dvc.lock

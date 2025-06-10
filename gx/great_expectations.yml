@@ -103,8 +103,7 @@ fluent_datasources:
       temperature_data:
         type: csv
         batching_regex: (?P<station>.*)\.csv
-    base_directory: 
-      /home/runner/work/temperatureForecaster/temperatureForecaster/data/preprocessed/temp
+    base_directory: E:\IIS_temp_forecaster\intelligent_system\data\preprocessed\temp
 notebooks:
 include_rendered_content:
   globally: false
