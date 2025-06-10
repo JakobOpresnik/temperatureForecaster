@@ -7,7 +7,7 @@ on:
 
 jobs:
   fetch_temp:
-    name: Fetch and preprocess temperature data
+    name: Fetch, preprocess and save temperature data to Supabase
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
@@ -15,6 +15,9 @@ jobs:
       MLFLOW_TRACKING_URI: https://dagshub.com/JakobOpresnik/temperatureForecaster.mlflow/
       MLFLOW_TRACKING_USERNAME: JakobOpresnik
       MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_TABLE_NAME: 'weather'
 
     steps:
       - name: Checkout repository
