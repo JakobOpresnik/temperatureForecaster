@@ -5,13 +5,14 @@ from datetime import datetime
 
 
 def fetch_temperature_data():
-    params = yaml.safe_load(open("params.yaml"))["fetch"]
-    stations = yaml.safe_load(open("params.yaml"))["stations"]
+    params = yaml.safe_load(open("params.yaml"))
+    fetch = params["fetch"]
+    stations = params["stations"]
 
     # URL to fetch the XML data
-    base_url = params["base_url"]
-    station_url_suffix = params["station_url_suffix"]
-    output_file_path_template = params["output_file_path_template"]
+    base_url = fetch["base_url"]
+    station_url_suffix = fetch["station_url_suffix"]
+    output_file_path_template = fetch["output_file_path_template"]
 
     for station in stations:
         filename = station_url_suffix.format(station=station)

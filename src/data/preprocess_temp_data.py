@@ -7,14 +7,15 @@ from lxml import etree as ET
 
 
 def preprocess_temperature_data():
-    params = yaml.safe_load(open("params.yaml"))["preprocess"]
-    stations = yaml.safe_load(open("params.yaml"))["stations"]
+    params = yaml.safe_load(open("params.yaml"))
+    preprocess = params["preprocess"]
+    stations = params["stations"]
 
-    xml_data_tag = params["xml_data_tag"]
-    input_file_path_template = params["input_file_path_template"]
-    output_file_path_template = params["output_file_path_template"]
-    filter_half_hour_stations = params["filter_half_hour_stations"]
-    columns = params["data_columns"]
+    xml_data_tag = preprocess["xml_data_tag"]
+    input_file_path_template = preprocess["input_file_path_template"]
+    output_file_path_template = preprocess["output_file_path_template"]
+    filter_half_hour_stations = preprocess["filter_half_hour_stations"]
+    columns = preprocess["data_columns"]
 
     for station in stations:
         input_file_path = input_file_path_template.format(station=station)

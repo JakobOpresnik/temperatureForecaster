@@ -24,10 +24,11 @@ except Exception as e:
 
 
 def save_data_to_supabase():
-    params = yaml.safe_load(open("params.yaml"))["preprocess"]
-    stations = yaml.safe_load(open("params.yaml"))["stations"]
+    params = yaml.safe_load(open("params.yaml"))
+    preprocess = params["preprocess"]
+    stations = params["stations"]
 
-    output_file_path_template = params["output_file_path_template"]
+    output_file_path_template = preprocess["output_file_path_template"]
 
     for station in stations:
         file_path = output_file_path_template.format(station=station)

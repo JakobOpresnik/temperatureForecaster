@@ -57,9 +57,10 @@ def check_test_results(result, station, reference_path, current_path):
 def test_temperature_data():
     print("Current working directory:", os.getcwd())
 
-    params_preprocess = yaml.safe_load(open("params.yaml"))["preprocess"]
-    params_test = yaml.safe_load(open("params.yaml"))["test"]
-    stations = yaml.safe_load(open("params.yaml"))["stations"]
+    params = yaml.safe_load(open("params.yaml"))
+    params_preprocess = params["preprocess"]
+    params_test = params["test"]
+    stations = params["stations"]
 
     output_file_path_template = params_preprocess["output_file_path_template"]
     reference_file_path_template = params_test["reference_file_path_template"]

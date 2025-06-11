@@ -246,9 +246,10 @@ def print_results(predictions, actuals, temp_scaler, df, lookback, X_test, stati
 
 
 def train_model_on_temperature_data():
-    params_train = yaml.safe_load(open("params.yaml"))["train"]
-    params_preprocess = yaml.safe_load(open("params.yaml"))["preprocess"]
-    stations = yaml.safe_load(open("params.yaml"))["stations"]
+    params = yaml.safe_load(open("params.yaml"))
+    params_train = params["train"]
+    params_preprocess = params["preprocess"]
+    stations = params["stations"]
 
     output_file_path_template = params_preprocess["output_file_path_template"]
 
