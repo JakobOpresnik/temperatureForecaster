@@ -5,6 +5,8 @@ from supabase import create_client, Client
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 
+print("SUPABASE_URL (station.py): ", url)
+
 supabase: Client = create_client(url, key)
 
 
@@ -17,7 +19,7 @@ def fetch_stations():
 
 
 def fetch_station_by_name(station_name: str):
-    response = supabase.from_("station").select("*").eq("name", station_name).single().execute()
+    response = supabase.from_('station').select('*').eq('name', station_name).single().execute()
     if response.error:
         raise Exception(f"Supabase error: {response.error.message}")
 
