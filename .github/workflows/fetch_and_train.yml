@@ -71,9 +71,11 @@ jobs:
           git commit -m "Update dvc.lock on $(date --iso-8601=seconds) with GitHub Actions" || echo "No changes to commit"
           git push || echo "Nothing to push"
 
-      - name: Pull latest changes
+      - name: Stash and pull latest changes
         run: |
+          git stash
           git pull origin main --rebase
+          git stash pop
 
       - name: Push changes
         uses: ad-m/github-push-action@master
