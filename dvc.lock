@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data/fetch_temp_data.py
       hash: md5
-      md5: 1aebfffd7dd1e33444759299dcd0a806
-      size: 1445
+      md5: 9ca874775342cd43ba0c48cd77bb239b
+      size: 1432
     params:
       params.yaml:
         fetch.base_url: https://meteo.arso.gov.si/uploads/probase/www/observ/surface/text/sl/recent/
@@ -21,21 +21,21 @@ stages:
     outs:
     - path: data/raw/temp/
       hash: md5
-      md5: dd3b4ecbeaa29a4255dbf96729467b8f.dir
-      size: 5587231
+      md5: 8be024a55064b2457e0b45a26084fda9.dir
+      size: 5587306
       nfiles: 5
   preprocess:
     cmd: poetry run python src/data/preprocess_temp_data.py
     deps:
     - path: data/raw/temp/
       hash: md5
-      md5: dd3b4ecbeaa29a4255dbf96729467b8f.dir
-      size: 5587231
+      md5: 8be024a55064b2457e0b45a26084fda9.dir
+      size: 5587306
       nfiles: 5
     - path: src/data/preprocess_temp_data.py
       hash: md5
-      md5: 9d7622e606563284f2c17e8c448bd2fc
-      size: 6075
+      md5: 65205e8b99f475d86c7ad39cca408802
+      size: 6090
     params:
       params.yaml:
         preprocess.data_columns:
@@ -73,16 +73,16 @@ stages:
     outs:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 2cc0aef32a82ac560794af955596bfeb.dir
-      size: 3075530
+      md5: bb43897c44f5f6f12846291b30ef8351.dir
+      size: 3079830
       nfiles: 7
   validation:
     cmd: "cd gx && poetry run python validate_data.py\n"
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 2cc0aef32a82ac560794af955596bfeb.dir
-      size: 3075530
+      md5: bb43897c44f5f6f12846291b30ef8351.dir
+      size: 3079830
       nfiles: 7
     - path: gx/validate_data.py
       hash: md5
@@ -99,9 +99,9 @@ stages:
     outs:
     - path: gx/uncommitted
       hash: md5
-      md5: 3e7d9e4f7fb5143602cb561f39b26658.dir
-      size: 64299045
-      nfiles: 1034
+      md5: 4c4acfa4e71145d8190eafd2e4bbef5c.dir
+      size: 65314034
+      nfiles: 1050
   list_preprocessed_files:
     cmd: ls -lh data/preprocessed/temp/
     deps:
@@ -115,13 +115,13 @@ stages:
     deps:
     - path: data/preprocessed/temp
       hash: md5
-      md5: 2cc0aef32a82ac560794af955596bfeb.dir
-      size: 3075530
+      md5: bb43897c44f5f6f12846291b30ef8351.dir
+      size: 3079830
       nfiles: 7
     - path: src/data/test_data.py
       hash: md5
-      md5: 47e9ce852765445c0644052357d28223
-      size: 4061
+      md5: 26091385db331df9884d9fb471146377
+      size: 4023
     params:
       params.yaml:
         preprocess.output_file_path_template: data/preprocessed/temp/{station}.csv
@@ -141,16 +141,16 @@ stages:
       nfiles: 7
     - path: reports
       hash: md5
-      md5: 53dbdb41226947af66fd3eaf7389dadc.dir
-      size: 1579286948
-      nfiles: 302
+      md5: 4536b7d01d40c663693290d616e381c3.dir
+      size: 1603974912
+      nfiles: 307
   train_model:
     cmd: poetry run python src/models/train.py
     deps:
     - path: data/preprocessed/temp/
       hash: md5
-      md5: 2cc0aef32a82ac560794af955596bfeb.dir
-      size: 3075530
+      md5: bb43897c44f5f6f12846291b30ef8351.dir
+      size: 3079830
       nfiles: 7
     - path: src/models/model.py
       hash: md5
@@ -162,8 +162,8 @@ stages:
       size: 3956
     - path: src/models/train.py
       hash: md5
-      md5: 55dd8f90f33e0d4ad485e79904938ab0
-      size: 12621
+      md5: f088f46c1d36dd5feb576591ecb56450
+      size: 12583
     params:
       params.yaml:
         stations:
@@ -209,6 +209,6 @@ stages:
     outs:
     - path: models/
       hash: md5
-      md5: be98a7819436679e885c3bdeb23d9746.dir
-      size: 311759831
-      nfiles: 152
+      md5: 0c394586c72b582468e6ca7be60db292.dir
+      size: 332277212
+      nfiles: 162
