@@ -34,6 +34,7 @@ COPY src/api/serve.py /app/src/
 COPY src/api/weather.py /app/src/
 COPY src/api/station.py /app/src/
 COPY src/api/model.py /app/src/
+COPY src/api/evaluate.py /app/src/
 COPY params.yaml /app/
 
 # Final cleanup

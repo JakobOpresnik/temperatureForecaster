@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 import yaml
 from fastapi.middleware.cors import CORSMiddleware
-from evaluate_model import load_models, evaluate_model
+from evaluate import load_models, evaluate_model
 from station import fetch_station_by_name, fetch_stations
 from weather import fetch_weather_data_for_station
 
