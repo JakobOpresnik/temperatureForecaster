@@ -76,5 +76,5 @@ jobs:
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Run data ingestion script
+      - name: Run data insertion script
         run: poetry run python src/data/save_to_supabase.py

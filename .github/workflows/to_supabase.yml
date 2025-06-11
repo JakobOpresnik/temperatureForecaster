@@ -2,8 +2,8 @@ name: Insert fetched data into Supabase
 
 on:
   workflow_dispatch: # allows manual triggering from the GitHub UI
-  schedule:
-    - cron: '0 * * * *' # run every hour
+  #schedule:
+  #  - cron: '0 * * * *' # run every hour
 
 jobs:
   insert_data:
