@@ -4,10 +4,10 @@ import yaml
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from api.weather import fetch_weather_data_for_station
-from api.station import fetch_station_by_name, fetch_stations
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
+from station import fetch_station_by_name, fetch_stations
+from weather import fetch_weather_data_for_station
 
 app = FastAPI()
 
