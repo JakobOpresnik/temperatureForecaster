@@ -31,7 +31,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy app source code and config
 COPY src/api/serve.py /app/src/
-COPY src/api/connect_supabase.py /app/src/
+COPY src/api/weather.py /app/src/
+COPY src/api/station.py /app/src/
 COPY src/api/model.py /app/src/
 COPY params.yaml /app/
 

@@ -67,7 +67,7 @@ def save_data_to_supabase():
             ).execute()
 
             if response.data:
-                print(f"Successfully inserted/skipped duplicates. Inserted {len(response.data)} new records.")
+                print(f"Successfully inserted/skipped duplicates. Inserted {len(response.data)} new records to database.")
             else:
                 print("No new records were inserted (all existing or empty input from CSV).")
 

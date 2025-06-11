@@ -3,7 +3,7 @@ name: Fetch data on schedule
 on:
   workflow_dispatch: # allows manual triggering from the GitHub UI
   schedule:
-    - cron: '0 */3 * * *' # run every 3h
+    - cron: '0 */2 * * *' # run every 2h
 
 jobs:
   fetch_temp:

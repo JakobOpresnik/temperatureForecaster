@@ -4,7 +4,8 @@ import yaml
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from connect_supabase import fetch_weather_data_for_station, save_data_to_supabase
+from api.weather import fetch_weather_data_for_station
+from api.station import fetch_station_by_name, fetch_stations
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 
@@ -52,8 +53,28 @@ def load_models():
 
 @app.get("/")
 def root():
-    save_data_to_supabase("data/preprocessed/temp/BOVEC.csv")
     return list(MODELS.keys())
+
+
+@app.get("/stations")
+def get_stations():
+    try:
+        stations = fetch_stations()
+        return stations
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("stations/{name}")
+def get_station_by_name(station_name: str):
+    try:
+        station = fetch_station_by_name(station_name=station_name)
+        if not station:
+            raise HTTPException(status_code=404, detail="Station not found")
+        return station
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @app.get("/predict/{station}")
