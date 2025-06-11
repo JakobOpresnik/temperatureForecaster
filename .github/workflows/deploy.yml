@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    if: false
     name: Build & Push Docker Image, Deploy to Railway
     runs-on: ubuntu-latest
 
