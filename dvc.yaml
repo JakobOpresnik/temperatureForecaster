@@ -30,10 +30,10 @@ stages:
 
   validation:
     cmd: |
-      cd gx && poetry run python validate_data.py
+      cd static/validation/gx && poetry run python validate_data.py
     deps:
       - data/preprocessed/temp/
-      - gx/validate_data.py
+      - static/validation/gx/validate_data.py
     params:
       - validate.base_dir
       - validate.data_source_name
@@ -42,7 +42,7 @@ stages:
       - validate.checkpoint_run_id
       - validate.expectation_suite_name
     outs:
-      - gx/uncommitted:
+      - static/validation/gx/uncommitted:
           persist: true
 
   test_data:
@@ -58,7 +58,7 @@ stages:
     outs:
       - data/reference/temp:
           persist: true
-      - reports:
+      - static/reports:
           persist: true
 
   train_model:

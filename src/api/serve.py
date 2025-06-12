@@ -1,10 +1,14 @@
+import os
 import yaml
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from validation_report import get_latest_validation_reports
+from test_report import get_latest_test_report, get_latest_test_reports
 from evaluate import load_models, load_model_metrics, evaluate_model, get_latest_forecasts, get_latest_forecast_by_station
 from station import fetch_station_by_name, fetch_stations
 from weather import fetch_weather_data_for_station
+from fastapi.staticfiles import StaticFiles
 
 
 MODELS = {}
@@ -29,9 +33,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],    
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# for serving static files
+static_path = os.path.join(os.path.dirname(__file__), '../../static')
+app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 
 @app.get("/")
@@ -98,5 +106,33 @@ def get_latest_forecast(station_name: str):
         if not forecast:
             raise HTTPException(status_code=404, detail="Forecast not found")
         return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.get("/report/test")
+def get_latest_test_report_urls():
+    try:
+        report_paths: list[str] = get_latest_test_reports(static_path=static_path)
+        print("report paths: ", report_paths)
+        return report_paths
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/report/test/{station}")
+def get_latest_test_report_url(station_name: str):
+    try:
+        report_path: str = get_latest_test_report(station_name=station_name, static_path=static_path)
+        return report_path
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.get("/report/validation")
+def get_latest_validation_report_urls():
+    try:
+        report_paths: list[str] = get_latest_validation_reports(static_path=static_path)
+        return report_paths
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

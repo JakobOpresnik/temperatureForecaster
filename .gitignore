@@ -18,6 +18,6 @@ __pycache__
 
 pat_token.txt
 
-gx/uncommitted/*
-/reports
+/static/validation/gx/uncommitted/*
+/static/reports
 /models

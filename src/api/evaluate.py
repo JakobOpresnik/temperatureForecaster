@@ -10,7 +10,7 @@ from supabase_client import get_supabase_client
 supabase = get_supabase_client()
 
 def load_models(models_dict: dict):
-    params = yaml.safe_load(open("../params.yaml"))
+    params = yaml.safe_load(open("../../params.yaml"))
     stations = params["stations"]
     params_train = params["train"]
 
@@ -31,7 +31,7 @@ def load_models(models_dict: dict):
 
 
 def load_model_metrics(metrics_dict: dict):
-    params = yaml.safe_load(open("../params.yaml"))
+    params = yaml.safe_load(open("../../params.yaml"))
     stations = params["stations"]
     params_train = params["train"]
 
@@ -64,7 +64,7 @@ def load_model_metrics(metrics_dict: dict):
 
 
 def load_model_by_name(model_name: str, models_dict: dict):
-    params_train = yaml.safe_load(open("../params.yaml"))["train"]
+    params_train = yaml.safe_load(open("../../params.yaml"))["train"]
     mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])
 
     client = mlflow.tracking.MlflowClient()
@@ -181,7 +181,7 @@ def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_ho
 
     print(f"Supabase insert into table 'forecast' response: {response}")
 
-    return predictions_list, actuals, forecast_timestamps_parsed
+    return predictions_list, actuals, timestamps_parsed
 
 
 def get_latest_forecasts():

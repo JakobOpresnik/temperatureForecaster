@@ -5,7 +5,6 @@ import numpy as np
 import yaml
 from supabase import create_client, Client
 
-
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 SUPABASE_TABLE_NAME = os.environ.get("SUPABASE_TABLE_NAME", "weather") # default to 'weather'
