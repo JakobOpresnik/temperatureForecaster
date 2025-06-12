@@ -3,9 +3,11 @@ import mlflow
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from datetime import datetime
+from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
+from supabase_client import get_supabase_client
 
+supabase = get_supabase_client()
 
 def load_models(models_dict: dict):
     params = yaml.safe_load(open("../params.yaml"))
@@ -28,6 +30,39 @@ def load_models(models_dict: dict):
     print(f"Loaded models for stations: {list(models_dict.keys())}")
 
 
+def load_model_metrics(metrics_dict: dict):
+    params = yaml.safe_load(open("../params.yaml"))
+    stations = params["stations"]
+    params_train = params["train"]
+
+    mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])
+    mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
+
+    client = mlflow.tracking.MlflowClient()
+
+    model_names = [mlflow_registered_model_name_template.format(station=station) for station in stations]
+
+    for model_name in model_names:
+        model = client.get_registered_model(name=model_name)
+        for latest_version in model.latest_versions:
+            # get latest version run
+            run_id = latest_version.run_id
+
+            # fetch metrics for this model version
+            run_info = client.get_run(run_id=run_id)
+            metrics = run_info.data.metrics
+
+            # extract relevant evaluation metrics
+            metrics_dict[model_name] = {
+                "mse": metrics.get("test_mse"),
+                "mae": metrics.get("test_mae"),
+                "rmse": metrics.get("test_rmse"),
+                "run_id": run_id
+            }
+
+    print(f"Loaded evaluation metrics: {list(metrics_dict.values())}")
+
+
 def load_model_by_name(model_name: str, models_dict: dict):
     params_train = yaml.safe_load(open("../params.yaml"))["train"]
     mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])
@@ -40,6 +75,21 @@ def load_model_by_name(model_name: str, models_dict: dict):
         models_dict[model_name] = mlflow.pyfunc.load_model(model_uri)
 
     print(f"Loaded model: {model_name}")
+
+
+def generate_forecast_timestamps(timestamps: list[str]) -> list[str]:
+    today = datetime.today().date()
+
+    datetime_format = "%Y-%m-%d %H:%M"
+
+    last_timestamp: str = timestamps[-1]
+    last_datetime: datetime = datetime.strptime(f"{today} {last_timestamp}", datetime_format)
+
+    forecast_timestamps: list[str] = [
+        (last_datetime + timedelta(minutes=30 * i)).strftime(datetime_format)
+        for i in range(1, 7)
+    ]
+    return forecast_timestamps
 
 
 def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_horizon: int = 240, columns_to_drop: list = []):
@@ -66,7 +116,7 @@ def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_ho
     df.ffill(inplace=True)
     df.bfill(inplace=True)
 
-    print("DF: ", df)
+    print("df: ", df)
 
     temp_scaler = MinMaxScaler()
     other_scaler = MinMaxScaler()
@@ -111,6 +161,34 @@ def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_ho
     predictions_rescaled = temp_scaler.inverse_transform(predictions_2d).reshape(n_samples, forecast_horizon)
     print("predictions rescaled: ", predictions_rescaled)
 
-    predictions_list = [round(val, 1) for val in predictions_rescaled.tolist()[0]]
+    predictions_list: list[float] = [float(round(val, 1)) for val in predictions_rescaled.tolist()[0]]
+    forecast_timestamps: list[str] = generate_forecast_timestamps(timestamps=timestamps_parsed)
+    forecast_timestamps_parsed = [timestamp.split(' ')[1] for timestamp in forecast_timestamps]
+    all_timestamps = timestamps_parsed + forecast_timestamps_parsed
 
-    return predictions_list, actuals, timestamps_parsed
+    on_conflict_cols = "station"
+
+    # insert predictions and their corresponding timestamps into db
+    response = supabase.table("forecast").upsert(
+        {
+            "predictions": predictions_list,
+            "timestamps": forecast_timestamps,
+            "station": station
+        },
+        on_conflict=on_conflict_cols,
+        ignore_duplicates=True
+    ).execute()
+
+    print(f"Supabase insert into table 'forecast' response: {response}")
+
+    return predictions_list, actuals, all_timestamps
+
+
+def get_latest_forecasts():
+    response = supabase.from_('forecast').select('*').execute()
+    return response.data
+
+
+def get_latest_forecast_by_station(station_name: str):
+    response = supabase.from_('forecast').select('*').eq('name', station_name).single().execute()
+    return response.data

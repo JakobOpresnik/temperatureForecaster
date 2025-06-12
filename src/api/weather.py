@@ -1,12 +1,6 @@
-import os
-from supabase import create_client, Client
+from supabase_client import get_supabase_client
 
-# handled by railway service variables
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
-
-supabase: Client = create_client(url, key)
-
+supabase = get_supabase_client()
 
 def fetch_weather_data_for_station(station: str, limit: int = 240):
     response = (

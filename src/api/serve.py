@@ -1,18 +1,21 @@
+import yaml
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
-import yaml
 from fastapi.middleware.cors import CORSMiddleware
-from evaluate import load_models, evaluate_model
+from evaluate import load_models, load_model_metrics, evaluate_model, get_latest_forecasts, get_latest_forecast_by_station
 from station import fetch_station_by_name, fetch_stations
 from weather import fetch_weather_data_for_station
 
 
 MODELS = {}
+EVAL_METRICS = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Loading models on startup...")
+    print("Loading models and evaluation metrics on startup...")
     load_models(models_dict=MODELS)
+    load_model_metrics(metrics_dict=EVAL_METRICS)
+    # print("METRICS: ", EVAL_METRICS)
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -27,19 +30,17 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*"],    
     allow_headers=["*"],
 )
 
 
-# @app.on_event("startup")
-# def load_models():
-#     load_models(MODELS)
-
-
 @app.get("/")
 def root():
-    return list(MODELS.keys())
+    return {
+       "models": list(MODELS.keys()),
+       "metrics": list(EVAL_METRICS.values())
+    }
 
 
 @app.get("/stations")
@@ -69,7 +70,7 @@ def load_model_by_name(model_name: str):
 
 @app.get("/predict/{station}")
 def predict(station: str):
-    params_train = yaml.safe_load(open("../params.yaml"))["train"]
+    params_train = yaml.safe_load(open("../../params.yaml"))["train"]
     lookback = params_train["lookback"]
     forecast_horizon = params_train["forecast_horizon"]
     columns_to_drop = params_train["columns_to_drop"]
@@ -80,3 +81,23 @@ def predict(station: str):
     predictions, actuals, timestamps = evaluate_model(station=station, data=df, models_dict=MODELS, forecast_horizon=forecast_horizon, columns_to_drop=columns_to_drop)
 
     return { "predictions": predictions, "actuals": actuals, "timestamps": timestamps }
+
+
+@app.get("/evaluate")
+def get_latest_forecasts():
+    try:
+        forecasts = get_latest_forecasts()
+        return forecasts
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/evaluate/{station}")
+def get_latest_forecast(station_name: str):
+    try:
+        forecast = get_latest_forecast_by_station(station_name=station_name)
+        if not forecast:
+            raise HTTPException(status_code=404, detail="Forecast not found")
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
