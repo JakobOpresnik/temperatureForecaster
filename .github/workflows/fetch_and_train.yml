@@ -73,7 +73,7 @@ jobs:
 
       - name: Stash and pull latest changes
         run: |
-          git stash
+          git stash -u
           git pull origin main --rebase
           git stash pop
 
