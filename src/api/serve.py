@@ -15,7 +15,6 @@ async def lifespan(app: FastAPI):
     print("Loading models and evaluation metrics on startup...")
     load_models(models_dict=MODELS)
     load_model_metrics(metrics_dict=EVAL_METRICS)
-    # print("METRICS: ", EVAL_METRICS)
     yield
 
 app = FastAPI(lifespan=lifespan)

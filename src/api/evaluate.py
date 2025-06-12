@@ -54,8 +54,8 @@ def load_model_metrics(metrics_dict: dict):
 
             # extract relevant evaluation metrics
             metrics_dict[model_name] = {
-                "mse": metrics.get("test_mse"),
                 "mae": metrics.get("test_mae"),
+                "mse": metrics.get("test_mse"),
                 "rmse": metrics.get("test_rmse"),
                 "run_id": run_id
             }
@@ -164,7 +164,7 @@ def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_ho
     predictions_list: list[float] = [float(round(val, 1)) for val in predictions_rescaled.tolist()[0]]
     forecast_timestamps: list[str] = generate_forecast_timestamps(timestamps=timestamps_parsed)
     forecast_timestamps_parsed = [timestamp.split(' ')[1] for timestamp in forecast_timestamps]
-    all_timestamps = timestamps_parsed + forecast_timestamps_parsed
+    # all_timestamps = timestamps_parsed + forecast_timestamps_parsed
 
     on_conflict_cols = "station"
 
@@ -181,7 +181,7 @@ def evaluate_model(station: str, data: DataFrame, models_dict: dict, forecast_ho
 
     print(f"Supabase insert into table 'forecast' response: {response}")
 
-    return predictions_list, actuals, all_timestamps
+    return predictions_list, actuals, forecast_timestamps_parsed
 
 
 def get_latest_forecasts():
