@@ -63,6 +63,45 @@ def load_model_metrics(metrics_dict: dict):
     print(f"Loaded evaluation metrics: {list(metrics_dict.values())}")
 
 
+def load_model_params(params_dict: dict):
+    params = yaml.safe_load(open("../../params.yaml"))
+    stations = params["stations"]
+    params_train = params["train"]
+
+    mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])
+    mlflow_registered_model_name_template = params_train["mlflow_registered_model_name"]
+
+    client = mlflow.tracking.MlflowClient()
+
+    model_names = [mlflow_registered_model_name_template.format(station=station) for station in stations]
+
+    for model_name in model_names:
+        model = client.get_registered_model(name=model_name)
+        for latest_version in model.latest_versions:
+            # get latest version run
+            run_id = latest_version.run_id
+
+            # fetch metrics for this model version
+            run_info = client.get_run(run_id=run_id)
+            params = run_info.data.params
+
+            # extract relevant evaluation metrics
+            params_dict[model_name] = {
+                "test_size": params.get("test_size"),
+                "val_size": params.get("val_size"),
+                "lookback": params.get("lookback"),
+                "forecast_horizon": params.get("forecast_horizon"),
+                "batch_size": params.get("batch_size"),
+                "dropout": params.get("dropout"),
+                "learning_rate": params.get("learning_rate"),
+                "patience": params.get("patience"),
+                "epochs": params.get("epochs"),
+                "run_id": run_id
+            }
+
+    print(f"Loaded model hyperparameters: {list(params_dict.values())}")
+
+
 def load_model_by_name(model_name: str, models_dict: dict):
     params_train = yaml.safe_load(open("../../params.yaml"))["train"]
     mlflow.set_tracking_uri(uri=params_train["mlflow_uri"])

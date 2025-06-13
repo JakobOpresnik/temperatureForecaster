@@ -4,19 +4,22 @@ from fastapi import FastAPI, HTTPException
 from middleware import setup_middleware
 from validation_report import get_latest_validation_reports
 from test_report import get_latest_test_report, get_latest_test_reports
-from evaluate import load_models, load_model_metrics, evaluate_model, get_latest_forecasts, get_latest_forecast_by_station
+from evaluate import load_models, load_model_metrics, load_model_params, evaluate_model, get_latest_forecasts, get_latest_forecast_by_station
 from station import fetch_station_by_name, fetch_stations
 from weather import fetch_weather_data_for_station
 
 
 MODELS = {}
 EVAL_METRICS = {}
+MODEL_PARAMS = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Loading models and evaluation metrics on startup...")
+    print("Loading models, evaluation metrics and model hyperparameters on startup...")
     load_models(models_dict=MODELS)
     load_model_metrics(metrics_dict=EVAL_METRICS)
+    load_model_params(params_dict=MODEL_PARAMS)
+    print("params: ", MODEL_PARAMS.values())
     yield
 
 
@@ -28,7 +31,8 @@ static_path = setup_middleware(app=app)
 def root():
     return {
        "models": list(MODELS.keys()),
-       "metrics": list(EVAL_METRICS.values())
+       "metrics": list(EVAL_METRICS.values()),
+       "hyperparameters": list(MODEL_PARAMS.values()),
     }
 
 
