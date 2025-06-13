@@ -2,7 +2,6 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
-from pathlib import Path
 
 
 def setup_middleware(app: FastAPI) -> str:
@@ -23,5 +22,5 @@ def setup_middleware(app: FastAPI) -> str:
     # for serving static files
     static_path: str = os.path.join(os.path.dirname(__file__), '../../static')
     app.mount("/static", StaticFiles(directory=static_path), name="static")
-    
+
     return static_path
