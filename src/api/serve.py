@@ -1,14 +1,12 @@
-import os
 import yaml
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from middleware import setup_middleware
 from validation_report import get_latest_validation_reports
 from test_report import get_latest_test_report, get_latest_test_reports
 from evaluate import load_models, load_model_metrics, evaluate_model, get_latest_forecasts, get_latest_forecast_by_station
 from station import fetch_station_by_name, fetch_stations
 from weather import fetch_weather_data_for_station
-from fastapi.staticfiles import StaticFiles
 
 
 MODELS = {}
@@ -21,25 +19,9 @@ async def lifespan(app: FastAPI):
     load_model_metrics(metrics_dict=EVAL_METRICS)
     yield
 
+
 app = FastAPI(lifespan=lifespan)
-
-# allow FE to make requests (production & local)
-origins = [
-    "https://temperatureforecaster-frontend-production.up.railway.app",
-    "http://localhost:5173"
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# for serving static files
-static_path = os.path.join(os.path.dirname(__file__), '../../static')
-app.mount("/static", StaticFiles(directory=static_path), name="static")
+static_path = setup_middleware(app=app)
 
 
 @app.get("/")
