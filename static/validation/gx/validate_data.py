@@ -80,8 +80,7 @@ def print_results(checkpoint_result):
 
 
 def validate_temperature_data():
-    
-    params = yaml.safe_load(open("../params.yaml"))["validate"]
+    params = yaml.safe_load(open("../../../params.yaml"))["validate"]
     base_dir = params["base_dir"]
     data_source_name = params["data_source_name"]
     data_asset_name = params["data_asset_name"]
