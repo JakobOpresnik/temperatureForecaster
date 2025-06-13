@@ -36,6 +36,9 @@ COPY src/api/station.py /app/src/
 COPY src/api/model.py /app/src/
 COPY src/api/evaluate.py /app/src/
 COPY src/api/supabase_client.py /app/src/
+COPY src/api/middleware.py /app/src/
+COPY src/api/validation_report.py /app/src/
+COPY src/api/test_report.py /app/src/
 COPY params.yaml /app/
 
 # Final cleanup
