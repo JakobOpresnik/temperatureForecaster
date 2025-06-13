@@ -32,7 +32,7 @@ preprocess:
     - PTUJ
 
 validate:
-  base_dir: '../data/preprocessed/temp/'
+  base_dir: '../../../data/preprocessed/temp/'
   data_source_name: 'temperature'
   data_asset_name: 'temperature_data'
   checkpoint_name: 'temperature_checkpoint'
